@@ -1,5 +1,12 @@
-from src.CreateDataframe import create
+from src.CreateDataframe import create_activities, create_events
+from src.PlotGraph import Gplot
 ''''''''''''''''''
-graph = create()
-print(graph)
+activities = create_activities()
+print(activities)
+
+events = create_events()
+print(events)
+
+Gplot(activities,events)
+
 

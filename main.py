@@ -1,6 +1,7 @@
-from src.Create import create_activities, create_events, create_table
-from src.PlotGraph import Gplot
+from src.logic.Create import create_activities, create_events, create_table
+from src.logic.PlotGraph import Gplot
 from tabulate import tabulate
+from src.view.Window import start_note
 ''''''''''''''''''
 activities = create_activities()
 print("Activities: ",activities,end="\n\n")

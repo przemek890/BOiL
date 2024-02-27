@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 
 import pandas as pd
 import plotly.express as ex
-from src.Create import create_table
+from src.logic.Create import create_table
 
 
 def formatuj_czas_na_date(czas):

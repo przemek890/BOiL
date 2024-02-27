@@ -1,6 +1,8 @@
 from src.logic.Create import create_activities, create_events, create_table
 from src.logic.PlotGraph import Gplot
 from tabulate import tabulate
+
+from src.view.Input import create_input_tab
 from src.view.Window import start_note
 from src.logic.Gantt import Gantt
 ''''''''''''''''''
@@ -20,8 +22,14 @@ def main():
     Gantt(activities)
 
     # UI - 1.0:
-    start_note()
+    notebook, root = start_note()
+    create_input_tab(notebook)
+
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
+
+
+
 

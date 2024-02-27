@@ -13,3 +13,8 @@
 > python3 -m venv venv
 - Aktywuj środowisko wirtualne za pomocą polecenia:
 > source venv/bin/activate
+
+---
+
+## Tablica Trello:
+> https://trello.com/b/lR4rTwb9/boil

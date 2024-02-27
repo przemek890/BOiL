@@ -14,7 +14,7 @@
 
 ---
 
-## instalacja pakietów zależnych:
+## Instalacja pakietów zależnych:
 > pip install -r requirements.txt  
 
 ---

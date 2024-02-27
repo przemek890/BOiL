@@ -12,7 +12,7 @@ print("Events: ",events,end="\n\n")
 table = create_table(activities)
 print(tabulate(table, headers='keys', tablefmt='simple', numalign='center', stralign='center'))
 
-Gplot(activities,events,table)
+#Gplot(activities,events,table)
 
 #jeszcze nie działa test
 # Gantt(activities)

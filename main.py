@@ -2,6 +2,7 @@ from src.logic.Create import create_activities, create_events, create_table
 from src.logic.PlotGraph import Gplot
 from tabulate import tabulate
 from src.view.Window import start_note
+from src.logic.Gantt import Gantt
 ''''''''''''''''''
 activities = create_activities()
 print("Activities: ",activities,end="\n\n")
@@ -15,7 +16,7 @@ print(tabulate(table, headers='keys', tablefmt='simple', numalign='center', stra
 #Gplot(activities,events,table)
 
 #jeszcze nie działa test
-# Gantt(activities)
+Gantt(activities)
 
 # UI - 1.0:
 start_note()

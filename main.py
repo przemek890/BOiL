@@ -14,7 +14,7 @@ print(tabulate(table, headers='keys', tablefmt='simple', numalign='center', stra
 
 Gplot(activities,events,table)
 
-#jeszcze nie działa
+#jeszcze nie działa test
 # Gantt(activities)
 
 # UI - 1.0:

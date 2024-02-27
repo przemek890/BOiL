@@ -1,0 +1,8 @@
+tabulate
+pandas
+numpy
+matplotlib
+datetime
+networkx
+pygraphviz
+plotly

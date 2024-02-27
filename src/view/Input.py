@@ -1,17 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
-def create_input_tab(notebook):
+def create_input_tab(notebook, bookmarks):
+    bookmarks[0].grid_columnconfigure(0, weight=1)
+    bookmarks[0].grid_rowconfigure(0, weight=1)
 
+    text_field = tk.Text(bookmarks[0])
+    text_field.insert('end', '''Test''')
+    text_field.grid(sticky='nsew')
 
-    tab1 = ttk.Frame(notebook)
-
-
-    # Tutaj dodaj elementy interfejsu użytkownika dla zakładki "Input"
-    # Na przykład:
-    label = tk.Label(tab1, text="To jest zakładka Input")
-    label.pack()
-
-    tab1.pack()
-
-    return tab1
+    notebook.add(bookmarks[0], text='Input')

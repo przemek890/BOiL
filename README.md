@@ -21,8 +21,9 @@
 
 ## Electron-js - Frontend/UI:
 
-- Zainicjuj nowy projekt Node.js
-> npm init -y
+[//]: # (- Zainicjuj nowy projekt Node.js)
+
+[//]: # (> npm init -y)
 
 - Zainstaluj Electron jako zależność deweloperską
 > npm install --save-dev electron

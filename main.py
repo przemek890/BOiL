@@ -1,9 +1,6 @@
 from src.logic.Create import create_activities, create_events, create_table
 from src.logic.PlotGraph import Gplot
 from tabulate import tabulate
-import tkinter as tk
-from src.view.Input import create_input_tab
-from src.view.Window import start_note
 from src.logic.Gantt import Gantt
 ''''''''''''''''''
 def main():
@@ -20,12 +17,6 @@ def main():
 
     # jeszcze nie działa test
     # Gantt(activities)
-
-    # UI - 1.0:
-    root = tk.Tk()
-    notebook, bookmarks = start_note(root)
-    create_input_tab(notebook,bookmarks)
-    root.mainloop()
 
 
 if __name__ == "__main__":

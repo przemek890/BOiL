@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+  <div id="tabs">
+    <ul>
+      <li><a href="#input">Input</a></li>
+      <li><a href="#graph">Graph</a></li>
+      <li><a href="#gantt">Gantt</a></li>
+    </ul>
+    <div id="input">
+        <script>
+            $(function() {
+            $("#input").load("input.html");
+            });
+        </script>
+    </div>
+    <div id="graph">
+        <script>
+            $(function() {
+            $("#graph").load("graph.html");
+            });
+        </script>
+    </div>
+    <div id="gantt">
+        <script>
+            $(function() {
+            $("#gantt").load("gantt.html");
+            });
+        </script>
+    </div>
+  </div>
+  <script>
+  $( function() {
+    $( "#tabs" ).tabs();
+  } );
+  </script>
+</body>
+</html>

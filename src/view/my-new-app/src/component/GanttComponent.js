@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import parse from 'html-react-parser';
+import React from 'react';
 import Plot from 'react-plotly.js';
 import ganttData from "./gantt.json"
 

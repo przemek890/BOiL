@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 
+import numpy as np
 import pandas as pd
 import plotly.express as ex
 from src.logic.Create import create_table
@@ -13,36 +14,29 @@ def formatuj_czas_na_date(czas):
 
     return sformatowany_czas
 
+class Zadanie:
+    def __init__(self,nazwa, czas, rezerwa, zadania_poprzedzające):
+        self.nazwa = nazwa
+        self.czas = czas
+        self.rezerwa = rezerwa
+        self.zadania_poprzedzające = np.array(zadania_poprzedzające)
+
+    def printcp(self):
+        str = "["
+        for i in self.zadania_poprzedzające:
+            str += i.nazwa+", "
+        str+="]"
+        return str
+
 def Gantt(activities):
     table = create_table(activities)
-    data = table["Czynność"].apply(lambda x: activities.get(x,"-"))
-    data2 = []
-    for i in data:
-        pom = []
-        for j in i:
-            pom.append(j[0])
-        data2.append(pom)
-    table["Czynność poprzedzająca"] = data2
-    def time_start(cp):
-        if cp[0] == "-":
-            return 0
-        else:
-            cs = 0
-            for i in cp:
-                cs += (table.loc[table["Czynność"] == i, "t"].values[0] + table.loc[table["Czynność"] == i, "Rezerwa"].values[0])
-            return cs
-
-    table["t_start"] = table["Czynność poprzedzająca"].apply(time_start)
-    table["t_end"] = table["t_start"] + table["t"]
-    tw = pd.DataFrame({"Task":table["Czynność"], "Start": table["t_start"], "Finish": table["t_end"]})
-    tw["Start"] = tw["Start"].apply(formatuj_czas_na_date)
-    tw["Finish"] = tw["Finish"].apply(formatuj_czas_na_date)
+    tw = pd.DataFrame({"Task":table["Czynność"],"Start":[formatuj_czas_na_date(i) for i in table["LS"]],"Finish":[formatuj_czas_na_date(i) for i in table["LF"]]})
 
     fig = ex.timeline(tw, x_start="Start", x_end="Finish", y="Task", color="Task")
     fig.update_yaxes(autorange="reversed")
     # fig.show()
-    print(tw)
-    print(table)
+    # print(tw)
+    # print(table)
 
     return fig.to_json()
 

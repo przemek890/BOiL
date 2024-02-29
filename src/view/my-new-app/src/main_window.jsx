@@ -23,12 +23,6 @@ const Main_window = () => {
                     </Stack>
                 </Toolbar>
             </AppBar>
-            {/*<ButtonGroup>*/}
-            {/*    <Button onClick={() => setActiveTab(0)}>Input</Button>*/}
-            {/*    <Button onClick={() => setActiveTab(1)}>Graph</Button>*/}
-            {/*    <Button onClick={() => setActiveTab(2)}>Gantt</Button>*/}
-            {/*    <Button onClick={() => setActiveTab(3)}>CPM Table</Button>*/}
-            {/*</ButtonGroup>*/}
             <div>
                     {activeTab === 0 && <InputComponent/>}
                     {activeTab === 1 && <GraphComponent/>}

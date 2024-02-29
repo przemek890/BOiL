@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 ''''''''''''''''''''
-def create_activities(path=os.getcwd() + '/Data/Datasets/Czynnosc_poprzedzajaca.csv'):
+def create_activities(path):
     df = pd.read_csv(path)
     graf = {}
     for i in range(len(df)):
@@ -13,17 +13,21 @@ def create_activities(path=os.getcwd() + '/Data/Datasets/Czynnosc_poprzedzajaca.
             for poprzedzajaca in czynnosc_poprzedzajaca:
                 graf[czynnosc].append((poprzedzajaca, czas_trwania))
     return graf
-def create_events(path=os.getcwd() + '/Data/Datasets/Numeracja_zdarzen.csv'):
+import numpy as np
+import pandas as pd
+
+def create_events(path):
     df = pd.read_csv(path)
     graf = {}
     for i in range(len(df)):
         czynnosc = df.iloc[i]['Czynnosc']
-        poprzednik = df.iloc[i]['Poprzednik']
-        nastepnik = df.iloc[i]['Nastepnik']
+        poprzednik = int(df.iloc[i]['Poprzednik']) if isinstance(df.iloc[i]['Poprzednik'], np.int64) else df.iloc[i]['Poprzednik']
+        nastepnik = int(df.iloc[i]['Nastepnik']) if isinstance(df.iloc[i]['Nastepnik'], np.int64) else df.iloc[i]['Nastepnik']
         if czynnosc not in graf:
             graf[czynnosc] = []
         graf[czynnosc].append((poprzednik, nastepnik))
     return graf
+
 def create_table(activities):
     df = pd.DataFrame(columns=['Czynność', 't', 'ES', 'EF', 'LS', 'LF', 'Rezerwa', 'Czynność krytyczna'])
     EF_dict = {}

@@ -6,3 +6,5 @@ datetime
 networkx
 pygraphviz
 plotly
+flask
+requests

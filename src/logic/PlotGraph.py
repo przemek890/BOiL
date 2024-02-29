@@ -30,6 +30,9 @@ def Gplot(activities, events, table):
     nx.draw_networkx_edge_labels(G, label_pos, edge_labels=labels, font_size=4,
                                  font_weight='bold', font_color='green',
                                  bbox=dict(facecolor='none', alpha=0.5, edgecolor='none'))
-    plt.savefig(os.getcwd() + "/Data/graph.pdf")
+
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    csv_file_path = os.path.join(current_script_path, "../../Data/")
+    plt.savefig(csv_file_path + "graph.pdf")
     plt.show()
 

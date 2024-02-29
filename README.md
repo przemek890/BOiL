@@ -19,19 +19,5 @@
 
 ---
 
-## Electron-js - Frontend/UI:
-
-[//]: # (- Zainicjuj nowy projekt Node.js)
-
-[//]: # (> npm init -y)
-
-- Zainstaluj Electron jako zależność deweloperską
-> npm install --save-dev electron
-
-- Uruchom electron - w katalogu z plikiem main.js:
-> npm start
-
----
-
 ## Tablica Trello:
 > https://trello.com/b/lR4rTwb9/boil

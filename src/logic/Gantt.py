@@ -1,4 +1,3 @@
-import os
 from datetime import timedelta, datetime
 
 import pandas as pd
@@ -41,6 +40,14 @@ def Gantt(activities):
 
     fig = ex.timeline(tw, x_start="Start", x_end="Finish", y="Task", color="Task")
     fig.update_yaxes(autorange="reversed")
-    fig.show()
+    # fig.show()
     print(tw)
     print(table)
+
+    return fig.to_json()
+
+
+
+
+
+

@@ -8,3 +8,4 @@ pygraphviz
 plotly
 flask
 requests
+flask_cors

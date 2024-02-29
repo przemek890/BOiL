@@ -4,8 +4,14 @@ from src.logic.Create import create_activities, create_table, create_events
 from src.logic.Gantt import Gantt
 from flask import send_file
 from src.logic.PlotGraph import Gplot
+from flask_cors import CORS
 ''''''''
 app = Flask(__name__)
+CORS(app, resources={r"/get_Gantt": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/get_tableCPM": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/get_activities": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/get_events": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/get_graph": {"origins": "http://localhost:3000"}})
 
 @app.route('/')
 def home():
@@ -43,8 +49,8 @@ def get_Gantt():
     current_script_path = os.path.dirname(os.path.abspath(__file__))
     csv_file_path = os.path.join(current_script_path, "../../../Data/csv", "Czynnosc_poprzedzajaca.csv")
     activities = create_activities(csv_file_path)
-    Gantt(activities)
-    return jsonify({"message": "Gantt chart created."})
+    gannt = Gantt(activities)
+    return gannt
 
 @app.route('/get_graph', methods=['GET'])
 def get_Graph():

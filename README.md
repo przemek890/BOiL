@@ -21,13 +21,34 @@
 ## Frontend:
 - Instalacja modułów:
 > cd ./src/view
+> 
 > npm install
+> 
 > cd ./my-new-app
+> 
 > npm install
 
 - Uruchomienie aplikacji:
-> npm start --prefix .\src\view\my-new-app\
+> npm start 
 
 ---
+
+## Odpalenie serwera Flask:
+
+> cd ./
+
+## MacOS:
+> python3 main.py
+
+## Windows:
+> python main.py
+
+---
+
+## Testy:
+> Curl lub Postman
+
+---
+
 ## Tablica Trello:
 > https://trello.com/b/lR4rTwb9/boil

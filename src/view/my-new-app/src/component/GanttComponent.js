@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
-import ganttData from "./gantt.json"
 
 const GanttComponent = () => {
-    console.log(ganttData)
-    console.log("text")
+    const [ganttData, setGanttData] = useState({data: [], layout: {}});
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_Gantt')
+            .then(response => response.json())
+            .then(data => setGanttData(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    console.log(ganttData);
+    console.log("text");
 
     return (
         <div>

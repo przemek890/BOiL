@@ -1,48 +1,78 @@
 import React, { useEffect, useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme } from '@mui/material';
+import { styled } from '@mui/system';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  fontWeight: 'bold',
+  backgroundColor: theme.palette.secondary.main,
+  color: theme.palette.secondary.contrastText,
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.selected,
+  },
+}));
+
+const StyledDiv = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  height: '100vh',
+});
+
+const StyledTableCellBody = styled(TableCell)({
+  color: 'black',
+});
 
 const CPMTableComponent = () => {
-    const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const theme = useTheme();
 
-    useEffect(() => {
-        fetch('http://localhost:5000/get_tableCPM')
-            .then(response => response.json())
-            .then(data => setTableData(data));
-    }, []);
+  useEffect(() => {
+    fetch('http://localhost:5000/get_tableCPM')
+      .then(response => response.json())
+      .then(data => setTableData(data));
+  }, []);
 
-    return (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-            {tableData.length > 0 && (
-                <table style={{ border: '1px solid black', textAlign: 'center', borderCollapse: 'collapse', width: '80%' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>Czynność</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>Czynność krytyczna</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>EF</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>ES</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>LF</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>LS</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>Rezerwa</th>
-                            <th style={{ border: '1px solid black', padding: '10px' }}>t</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tableData.map((row, index) => (
-                            <tr key={index}>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.Czynność}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row['Czynność krytyczna']}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.EF}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.ES}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.LF}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.LS}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.Rezerwa}</td>
-                                <td style={{ border: '1px solid black', padding: '10px' }}>{row.t}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </div>
-    );
+
+  return (
+    <StyledDiv>
+      <TableContainer>
+        {tableData.length > 0 && (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Czynność</StyledTableCell>
+                <StyledTableCell>Czynność krytyczna</StyledTableCell>
+                <StyledTableCell>EF</StyledTableCell>
+                <StyledTableCell>ES</StyledTableCell>
+                <StyledTableCell>LF</StyledTableCell>
+                <StyledTableCell>LS</StyledTableCell>
+                <StyledTableCell>Rezerwa</StyledTableCell>
+                <StyledTableCell>t</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableData.map((row, index) => (
+                <StyledTableRow key={index}>
+                  <StyledTableCellBody>{row.Czynność}</StyledTableCellBody>
+                  <StyledTableCellBody>{row['Czynność krytyczna']}</StyledTableCellBody>
+                  <StyledTableCellBody>{row.EF}</StyledTableCellBody>
+                  <StyledTableCellBody>{row.ES}</StyledTableCellBody>
+                  <StyledTableCellBody>{row.LF}</StyledTableCellBody>
+                  <StyledTableCellBody>{row.LS}</StyledTableCellBody>
+                  <StyledTableCellBody>{row.Rezerwa}</StyledTableCellBody>
+                  <StyledTableCellBody>{row.t}</StyledTableCellBody>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </TableContainer>
+    </StyledDiv>
+  );
 };
 
 export default CPMTableComponent;

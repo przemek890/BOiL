@@ -15,7 +15,7 @@ const GanttComponent = () => {
     console.log("text");
 
     return (
-        <div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Plot
                 data={ganttData.data}
                 layout={ganttData.layout}

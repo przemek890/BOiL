@@ -28,7 +28,10 @@
     "style-loader": "^3.3.4"
   },
   "keywords": [],
-  "author": "wiktor",
+  "author": {
+    "name": "wiktor",
+    "email": "wiktor.k.2002@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0"

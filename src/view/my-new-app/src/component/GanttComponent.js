@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
+import { Typography } from '@mui/material';
 
 const GanttComponent = () => {
     const [ganttData, setGanttData] = useState({data: [], layout: {}});
@@ -11,14 +12,15 @@ const GanttComponent = () => {
             .catch(error => console.error('Error:', error));
     }, []);
 
-    console.log(ganttData);
-    console.log("text");
-
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '75vh', width: '75vw' }}>
+            <Typography variant="h4" component="div" gutterBottom align="center" style={{ color: 'white', fontWeight: 'bold' }}>
+                GANTT CHART
+            </Typography>
             <Plot
                 data={ganttData.data}
                 layout={ganttData.layout}
+                style={{ width: '100%', height: '100%' }}
             />
         </div>
     );

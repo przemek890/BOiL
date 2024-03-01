@@ -1,5 +1,5 @@
 import os
-from flask import Flask,jsonify
+from flask import Flask,jsonify,send_file
 from src.logic.Create import create_activities, create_table, create_events
 from src.logic.Gantt import Gantt
 from flask import send_file
@@ -7,11 +7,7 @@ from src.logic.PlotGraph import Gplot
 from flask_cors import CORS
 ''''''''
 app = Flask(__name__)
-CORS(app, resources={r"/get_Gantt": {"origins": "http://localhost:3000"}})
-CORS(app, resources={r"/get_tableCPM": {"origins": "http://localhost:3000"}})
-CORS(app, resources={r"/get_activities": {"origins": "http://localhost:3000"}})
-CORS(app, resources={r"/get_events": {"origins": "http://localhost:3000"}})
-CORS(app, resources={r"/get_graph": {"origins": "http://localhost:3000"}})
+CORS(app)
 
 @app.route('/')
 def home():
@@ -64,6 +60,18 @@ def get_Graph():
     events = create_events(csv_file_path_2)
     Gplot(activities, events, table)
     return send_file(current_script_path_2 + "/../../../Data/graph.pdf", as_attachment=True)
+
+@app.route('/get_html', methods=['GET'])
+def get_html():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    html_file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/index.html")
+    return send_file(html_file_path, mimetype='text/html')
+
+@app.route('/get_css', methods=['GET'])
+def get_css():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    css_file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/style.css")
+    return send_file(css_file_path, mimetype='text/css')
 
 
 

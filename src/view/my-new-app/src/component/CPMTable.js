@@ -8,10 +8,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.secondary.contrastText,
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.selected,
-  },
+const StyledTableRow = styled(TableRow)(({ theme, isCritical }) => ({
+  backgroundColor: isCritical ? theme.palette.action.hover : 'inherit',
 }));
 
 const StyledDiv = styled('div')({
@@ -56,7 +54,7 @@ const CPMTableComponent = () => {
             </TableHead>
             <TableBody>
               {tableData.map((row, index) => (
-                <StyledTableRow key={index}>
+                <StyledTableRow key={index} isCritical={row['Czynność krytyczna'] === 'tak'}>
                   <StyledTableCellBody>{row.Czynność}</StyledTableCellBody>
                   <StyledTableCellBody>{row['Czynność krytyczna']}</StyledTableCellBody>
                   <StyledTableCellBody>{row.EF}</StyledTableCellBody>

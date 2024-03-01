@@ -73,6 +73,12 @@ def get_css():
     css_file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/style.css")
     return send_file(css_file_path, mimetype='text/css')
 
+@app.route('/get_js', methods=['GET'])
+def get_js():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    js_file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/script.js")
+    return send_file(js_file_path, mimetype='application/javascript')
+
 
 
 

@@ -35,10 +35,10 @@ module.exports = [
     use: 'json-loader',
     type: 'javascript/auto'
   },
-  {
-    test: /\.(png|jpe?g|gif)$/i,
-    use: 'file-loader',
-  },
+  // {
+  //   test: /\.(png|jpe?g|gif)$/i,
+  //   use: 'file-loader',
+  // },
 
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:

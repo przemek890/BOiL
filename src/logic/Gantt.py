@@ -68,6 +68,7 @@ def Gantt(activities):
 
     fig = ex.timeline(tw, x_start="Start", x_end="Finish", y="Task", color="Task")
     fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(visible=False)
     # fig.show()
     # print(tw)
     # print(table)

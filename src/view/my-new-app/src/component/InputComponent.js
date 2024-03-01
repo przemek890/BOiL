@@ -1,5 +1,6 @@
 import React from 'react';
 import './Input/style.css'
+// import * as ISC from "./Input/script"
 
 function ExportOptions({ id }) {
   return (
@@ -8,10 +9,10 @@ function ExportOptions({ id }) {
       <input type="checkbox" id={`export-file${id}`} />
       <div className="export__file-options">
         <label>Export As &nbsp; &#10140;</label>
-        <label htmlFor={`export-file${id}`} id={`toPDF${id}`}>PDF <img src="Input/images/pdf.png" alt="" /></label>
-        <label htmlFor={`export-file${id}`} id={`toJSON${id}`}>JSON <img src="Input/images/json.png" alt="" /></label>
-        <label htmlFor={`export-file${id}`} id={`toCSV${id}`}>CSV <img src="Input/images/csv.png" alt="" /></label>
-        <label htmlFor={`export-file${id}`} id={`toEXCEL${id}`}>EXCEL <img src="Input/images/excel.png" alt="" /></label>
+        <label htmlFor={`export-file${id}`} id={`toPDF${id}`}>PDF <img src="./Input/images/pdf.png" alt="" /></label>
+        <label htmlFor={`export-file${id}`} id={`toJSON${id}`}>JSON <img src="./Input/images/json.png" alt="" /></label>
+        <label htmlFor={`export-file${id}`} id={`toCSV${id}`}>CSV <img src="./Input/images/csv.png" alt="" /></label>
+        <label htmlFor={`export-file${id}`} id={`toEXCEL${id}`}>EXCEL <img src="./Input/images/excel.png" alt="" /></label>
       </div>
     </div>
   );
@@ -23,7 +24,7 @@ function TableHeader({ title, id }) {
       <h1>{title}</h1>
       <div className="input-group">
         <input type="search" placeholder="Search Data..." />
-        <img src="Input/images/search.png" alt="" />
+        <img src="./Input/images/search.png" alt="" />
       </div>
       <ExportOptions id={id} />
     </section>

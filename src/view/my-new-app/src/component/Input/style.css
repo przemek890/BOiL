@@ -49,6 +49,7 @@ main.table {
     overflow: hidden;
     margin-right: 10px; /* Margines z prawej strony */
     margin-left: 10px; /* Margines z prawej strony */
+    margin-top: 20px; /* Margines z prawej strony */
 }
 
 .table__header {

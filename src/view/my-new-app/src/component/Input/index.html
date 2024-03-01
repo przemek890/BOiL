@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Input proejkt Boil tabele do csv</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <main class="table" id="customers_table">
+        <section class="table__header">
+            <h1>Czynność poprzedzająca</h1>
+            <div class="input-group">
+                <input type="search" placeholder="Search Data...">
+                <img src="images/search.png" alt="">
+            </div>
+            <div class="export__file">
+                <label for="export-file" class="export__file-btn" title="Export File"></label>
+                <input type="checkbox" id="export-file">
+                <div class="export__file-options">
+                    <label>Export As &nbsp; &#10140;</label>
+                    <label for="export-file" id="toPDF">PDF <img src="images/pdf.png" alt=""></label>
+                    <label for="export-file" id="toJSON">JSON <img src="images/json.png" alt=""></label>
+                    <label for="export-file" id="toCSV">CSV <img src="images/csv.png" alt=""></label>
+                    <label for="export-file" id="toEXCEL">EXCEL <img src="images/excel.png" alt=""></label>
+                </div>
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Id <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> Czynność <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> Czynność bezpośrednio poprzedzająca <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> Czas trwania <span class="icon-arrow">&UpArrow;</span></th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                <tbody>
+                <tbody>
+                <tr>
+                    <td> 1 </td>
+                    <td> A </td>
+                    <td> - </td>
+                    <td> 5 </td>
+
+                </tr>
+                <tr>
+                    <td> 2 </td>
+                    <td> B </td>
+                    <td> - </td>
+                    <td> 7 </td>
+
+                </tr>
+                <tr>
+                    <td> 3</td>
+                    <td> C </td>
+                    <td> A </td>
+                    <td> 6 </td>
+
+                </tr>
+                <tr>
+                    <td> 4</td>
+                    <td> D </td>
+                    <td> A </td>
+                    <td> 8 </td>
+
+                </tr>
+                <tr>
+                    <td> 5</td>
+                    <td> E </td>
+                    <td> B </td>
+                    <td> 3 </td>
+
+                </tr>
+                <tr>
+                    <td> 6</td>
+                    <td> F </td>
+                    <td> C </td>
+                    <td> 4 </td>
+
+                </tr>
+                <tr>
+                    <td> 7</td>
+                    <td> G </td>
+                    <td> C </td>
+                    <td> 2 </td>
+
+                </tr>
+                <tr>
+                    <td> 8</td>
+                    <td> H </td>
+                    <td> E D F </td>
+                    <td> 5 </td>
+
+                </tr>
+                <tr>
+                    <td> 9</td>
+                    <td> No data </td>
+                    <td> No data </td>
+                    <td> No data </td>
+
+                </tr>
+
+                <tr>
+                    <td> 10</td>
+                    <td> No data </td>
+                    <td> No data </td>
+                    <td> No data </td>
+
+                </tr>
+
+            </table>
+
+
+        </section>
+<!--        <button id="addRowButton_customers">Dodaj wiersz</button>-->
+    </main>
+
+    <main class="table" id="right_table">
+        <section class="table__header">
+            <h1>Numeracja zdarzeń</h1>
+            <div class="input-group">
+                <input type="search" placeholder="Search Data...">
+                <img src="images/search.png" alt="">
+            </div>
+            <div class="export__file">
+                <label for="export-file1" class="export__file-btn" title="Export File"></label>
+                <input type="checkbox" id="export-file1">
+                <div class="export__file-options">
+                    <label>Export As &nbsp; &#10140;</label>
+                    <label for="export-file1" id="toPDF1">PDF <img src="images/pdf.png" alt=""></label>
+                    <label for="export-file1" id="toJSON1">JSON <img src="images/json.png" alt=""></label>
+                    <label for="export-file1" id="toCSV1">CSV <img src="images/csv.png" alt=""></label>
+                    <label for="export-file1" id="toEXCEL1">EXCEL <img src="images/excel.png" alt=""></label>
+                </div>
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                <tr>
+                    <th> Id <span class="icon-arrow">&UpArrow;</span></th>
+                    <th> Czynność <span class="icon-arrow">&UpArrow;</span></th>
+                    <th> Poprzednik <span class="icon-arrow">&UpArrow;</span></th>
+                    <th> Następnik <span class="icon-arrow">&UpArrow;</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tbody>
+                <tbody>
+                <tr>
+                    <td> 1 </td>
+                    <td> A </td>
+                    <td> 1 </td>
+                    <td> 2 </td>
+
+                </tr>
+                <tr>
+                    <td> 2 </td>
+                    <td> B </td>
+                    <td> 1 </td>
+                    <td> 3 </td>
+
+                </tr>
+                <tr>
+                    <td> 3</td>
+                    <td> C </td>
+                    <td> 2 </td>
+                    <td> 4 </td>
+
+                </tr>
+                <tr>
+                    <td> 4</td>
+                    <td> D </td>
+                    <td> 2 </td>
+                    <td> 5 </td>
+
+                </tr>
+                <tr>
+                    <td> 5</td>
+                    <td> E </td>
+                    <td> 3 </td>
+                    <td> 5 </td>
+
+                </tr>
+                <tr>
+                    <td> 6</td>
+                    <td> F </td>
+                    <td> 4 </td>
+                    <td> 5 </td>
+
+                </tr>
+                <tr>
+                    <td> 7</td>
+                    <td> G </td>
+                    <td> 4 </td>
+                    <td> 6 </td>
+
+                </tr>
+                <tr>
+                    <td> 8</td>
+                    <td> H </td>
+                    <td> 5 </td>
+                    <td> 6 </td>
+
+                </tr>
+                <tr>
+                    <td> 9</td>
+                    <td> No data </td>
+                    <td> No data </td>
+                    <td> No data </td>
+
+                </tr>
+
+                <tr>
+                    <td> 10</td>
+                    <td> No data </td>
+                    <td> No data </td>
+                    <td> No data </td>
+
+                </tr>
+
+            </table>
+        </section>
+<!--        <button id="addRowButton_right">Dodaj wiersz</button>-->
+    </main>
+    <script src="script.js"></script>
+    <script src="scriptnext.js"></script>
+
+</body>
+
+</html>

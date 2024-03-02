@@ -5,7 +5,7 @@ def Graph(activities):
     G = nx.Graph()
     G.add_edge(1, 2)
     G.add_edge(2, 3)
-
+    #
     pos = nx.spring_layout(G)
 
     edge_x = []

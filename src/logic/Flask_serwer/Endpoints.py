@@ -79,6 +79,43 @@ def get_js():
     js_file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/script.js")
     return send_file(js_file_path, mimetype='application/javascript')
 
+# -----------------------------------------
+
+@app.route('/get_csv_png', methods=['GET'])
+def get_csv_png():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/csv.png")
+    return send_file(file_path, mimetype='image/png')
+
+@app.route('/get_excel_png', methods=['GET'])
+def get_excel_png():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/excel.png")
+    return send_file(file_path, mimetype='image/png')
+
+@app.route('/get_export_png', methods=['GET'])
+def get_export_png():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/export.png")
+    return send_file(file_path, mimetype='image/png')
+
+@app.route('/get_json_png', methods=['GET'])
+def get_json_png():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/json.png")
+    return send_file(file_path, mimetype='image/png')
+
+@app.route('/get_pdf_png', methods=['GET'])
+def get_pdf_png():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/pdf.png")
+    return send_file(file_path, mimetype='image/png')
+
+@app.route('/get_search_png', methods=['GET'])
+def get_search_png():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/search.png")
+    return send_file(file_path, mimetype='image/png')
 
 
 

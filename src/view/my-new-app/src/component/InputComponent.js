@@ -21,7 +21,6 @@ const InputComponent = () => {
       .then(data => {
         setCssData(data);
       })
-
       .catch((error) => {
         console.error('Error:', error);
       });
@@ -41,20 +40,22 @@ const InputComponent = () => {
       const iframe = document.querySelector('iframe');
       iframe.onload = function() {
         const doc = iframe.contentWindow.document;
-        const styleElement = doc.createElement('style');
-        styleElement.textContent = cssData;
-        doc.head.appendChild(styleElement);
+        if (doc.body) {
+          const styleElement = doc.createElement('style');
+          styleElement.textContent = cssData;
+          doc.head.appendChild(styleElement);
 
-        const scriptElement = doc.createElement('script');
-        scriptElement.textContent = jsData;
-        doc.body.appendChild(scriptElement);
+          const scriptElement = doc.createElement('script');
+          scriptElement.textContent = jsData;
+          doc.body.appendChild(scriptElement);
+        }
       };
+      iframe.src = htmlData;
     }
   }, [htmlData, cssData, jsData]);
 
   return (
-
-    <iframe src={htmlData} title="My HTML" style={{width: '100vw', height: '100vh'}} />
+    <iframe title="My HTML" style={{width: '100vw', height: '100vh'}} />
   );
 };
 

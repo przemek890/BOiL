@@ -16,12 +16,12 @@ const InputComponent = () => {
       .catch((error) => {
         console.error('Error:', error);
       });
-
     fetch('http://localhost:5000/get_css')
       .then(response => response.text())
       .then(data => {
         setCssData(data);
       })
+
       .catch((error) => {
         console.error('Error:', error);
       });
@@ -53,6 +53,7 @@ const InputComponent = () => {
   }, [htmlData, cssData, jsData]);
 
   return (
+
     <iframe src={htmlData} title="My HTML" style={{width: '100vw', height: '100vh'}} />
   );
 };

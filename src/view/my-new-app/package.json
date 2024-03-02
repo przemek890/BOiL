@@ -24,6 +24,7 @@
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "css-loader": "^6.10.0",
     "electron": "29.1.0",
+    "file-loader": "^6.2.0",
     "image-webpack-loader": "^8.1.0",
     "node-loader": "^2.0.0",
     "style-loader": "^3.3.4"
@@ -35,7 +36,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
-    "file-loader": "^6.2.0"
+    "electron-squirrel-startup": "^1.0.0"
   }
 }

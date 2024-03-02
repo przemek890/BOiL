@@ -66,7 +66,8 @@ def Gantt(activities):
     table = create_table(activities)
     tw = pd.DataFrame({"Task":table["Czynność"],"Start":[formatuj_czas_na_date(i) for i in table["ES"]],"Finish":[formatuj_czas_na_date(i) for i in table["EF"]]})
 
-    fig = ex.timeline(tw, x_start="Start", x_end="Finish", y="Task", color="Task")
+    fig = ex.timeline(tw, x_start="Start", x_end="Finish", y="Task", color="Task", template="plotly_dark")
+    fig.update_layout(paper_bgcolor='rgba(1,1,1,0.5)')
     fig.update_yaxes(autorange="reversed")
     fig.update_xaxes(visible=False)
     # fig.show()

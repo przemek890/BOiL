@@ -29,6 +29,10 @@ const StyledTableCellBody = styled(TableCell)(({ theme, isCritical }) => ({
   backgroundColor: isCritical ? '#f0f0f0' : 'white',
 }));
 
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  borderRadius: '10px', // Dodano zaokrąglenie rogów
+}));
+
 const CPMTableComponent = () => {
   const [tableData, setTableData] = useState([]);
   const theme = useTheme();
@@ -44,7 +48,7 @@ const CPMTableComponent = () => {
       <Typography variant="h4" component="div" gutterBottom align="center" style={{ color: 'white', fontWeight: 'bold' }}>
         CRITICAL PATH METHOD TABLE
       </Typography>
-      <TableContainer component={Paper}>
+      <StyledTableContainer component={Paper}>
         {tableData.length > 0 && (
           <Table>
             <TableHead>
@@ -75,7 +79,7 @@ const CPMTableComponent = () => {
             </TableBody>
           </Table>
         )}
-      </TableContainer>
+      </StyledTableContainer>
     </StyledDiv>
   );
 };

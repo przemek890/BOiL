@@ -272,7 +272,7 @@ thead th.active,tbody td.active {
     position: absolute;
     right: 0;
     
-    width: 12rem;
+    width: 8rem;
     border-radius: .5rem;
     overflow: hidden;
     text-align: center;
@@ -280,15 +280,16 @@ thead th.active,tbody td.active {
     opacity: 0;
     transform: scale(.8);
     transform-origin: top right;
-    
+
     box-shadow: 0 .2rem .5rem #0004;
-    
+
     transition: .2s;
 }
 
+
 .export__file input:checked + .export__file-options {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(0.75);
     z-index: 100;
 }
 

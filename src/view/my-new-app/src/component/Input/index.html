@@ -52,13 +52,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             let tableBody = document.getElementById('tableBody1');
-            let idCounter = 1; // Dodajemy licznik ID
+            let idCounter = 1;
             for (let key in data) {
                 for (let activity of data[key]) {
                     let row = document.createElement('tr');
 
                     let cellID = document.createElement('td');
-                    cellID.textContent = idCounter++; // Używamy licznika jako ID
+                    cellID.textContent = idCounter++;
                     row.appendChild(cellID);
 
                     let cellActivity = document.createElement('td');
@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error:', error));
 });
+
 </script>
 </body>
 

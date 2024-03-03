@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +26,7 @@
                     <label for="export-file" id="toJSON">JSON <img src="http://localhost:5000/get_json_png" alt=""></label>
                     <label for="export-file" id="toCSV">CSV <img src="http://localhost:5000/get_csv_png" alt=""></label>
                     <label for="export-file" id="toEXCEL">EXCEL <img src="http://localhost:5000/get_excel_png" alt=""></label>
+                    <label for="export-file" id="GENERATE">FOR CPM <img src="http://localhost:5000/get_export_png" alt=""></label>
                 </div>
             </div>
         </section>
@@ -34,206 +34,124 @@
             <table>
                 <thead>
                     <tr>
-                        <th> Id <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Czynność <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Czynność bezpośrednio poprzedzająca <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Czas trwania <span class="icon-arrow">&UpArrow;</span></th>
-
-
+                        <th>ID<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Czynnosc<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Czynnosc_bezposrednio_poprzedzajaca<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Czas_trwania<span class="icon-arrow">&UpArrow;</span></th>
                     </tr>
                 </thead>
-                <tbody>
-                <tbody>
-                <tbody>
-                <tr>
-                    <td> 1 </td>
-                    <td> A </td>
-                    <td> - </td>
-                    <td> 5 </td>
-
-                </tr>
-                <tr>
-                    <td> 2 </td>
-                    <td> B </td>
-                    <td> - </td>
-                    <td> 7 </td>
-
-                </tr>
-                <tr>
-                    <td> 3</td>
-                    <td> C </td>
-                    <td> A </td>
-                    <td> 6 </td>
-
-                </tr>
-                <tr>
-                    <td> 4</td>
-                    <td> D </td>
-                    <td> A </td>
-                    <td> 8 </td>
-
-                </tr>
-                <tr>
-                    <td> 5</td>
-                    <td> E </td>
-                    <td> B </td>
-                    <td> 3 </td>
-
-                </tr>
-                <tr>
-                    <td> 6</td>
-                    <td> F </td>
-                    <td> C </td>
-                    <td> 4 </td>
-
-                </tr>
-                <tr>
-                    <td> 7</td>
-                    <td> G </td>
-                    <td> C </td>
-                    <td> 2 </td>
-
-                </tr>
-                <tr>
-                    <td> 8</td>
-                    <td> H </td>
-                    <td> E D F </td>
-                    <td> 5 </td>
-
-                </tr>
-                <tr>
-                    <td> 9</td>
-                    <td> No data </td>
-                    <td> No data </td>
-                    <td> No data </td>
-
-                </tr>
-
-                <tr>
-                    <td> 10</td>
-                    <td> No data </td>
-                    <td> No data </td>
-                    <td> No data </td>
-
-                </tr>
-
-            </table>
-
-
-        </section>
-<!--        <button id="addRowButton_customers">Dodaj wiersz</button>-->
-    </main>
-
-    <main class="table" id="right_table">
-        <section class="table__header">
-            <h1>Numeracja zdarzeń</h1>
-            <div class="input-group">
-                <input type="search" placeholder="Search Data...">
-                <img src="http://localhost:5000/get_search_png" alt="">
-            </div>
-            <div class="export__file">
-                <label for="export-file1" class="export__file-btn" title="Export File"></label>
-                <input type="checkbox" id="export-file1">
-                <div class="export__file-options">
-                    <label>Export As &nbsp; &#10140;</label>
-                    <label for="export-file1" id="toPDF1">PDF <img src="http://localhost:5000/get_pdf_png" alt=""></label>
-                    <label for="export-file1" id="toJSON1">JSON <img src="http://localhost:5000/get_json_png" alt=""></label>
-                    <label for="export-file1" id="toCSV1">CSV <img src="http://localhost:5000/get_csv_png" alt=""></label>
-                    <label for="export-file1" id="toEXCEL1">EXCEL <img src="http://localhost:5000/get_excel_png" alt=""></label>
-                </div>
-            </div>
-        </section>
-        <section class="table__body">
-            <table>
-                <thead>
-                <tr>
-                    <th> Id <span class="icon-arrow">&UpArrow;</span></th>
-                    <th> Czynność <span class="icon-arrow">&UpArrow;</span></th>
-                    <th> Poprzednik <span class="icon-arrow">&UpArrow;</span></th>
-                    <th> Następnik <span class="icon-arrow">&UpArrow;</span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tbody>
-                <tbody>
-                <tr>
-                    <td> 1 </td>
-                    <td> A </td>
-                    <td> 1 </td>
-                    <td> 2 </td>
-
-                </tr>
-                <tr>
-                    <td> 2 </td>
-                    <td> B </td>
-                    <td> 1 </td>
-                    <td> 3 </td>
-
-                </tr>
-                <tr>
-                    <td> 3</td>
-                    <td> C </td>
-                    <td> 2 </td>
-                    <td> 4 </td>
-
-                </tr>
-                <tr>
-                    <td> 4</td>
-                    <td> D </td>
-                    <td> 2 </td>
-                    <td> 5 </td>
-
-                </tr>
-                <tr>
-                    <td> 5</td>
-                    <td> E </td>
-                    <td> 3 </td>
-                    <td> 5 </td>
-
-                </tr>
-                <tr>
-                    <td> 6</td>
-                    <td> F </td>
-                    <td> 4 </td>
-                    <td> 5 </td>
-
-                </tr>
-                <tr>
-                    <td> 7</td>
-                    <td> G </td>
-                    <td> 4 </td>
-                    <td> 6 </td>
-
-                </tr>
-                <tr>
-                    <td> 8</td>
-                    <td> H </td>
-                    <td> 5 </td>
-                    <td> 6 </td>
-
-                </tr>
-                <tr>
-                    <td> 9</td>
-                    <td> No data </td>
-                    <td> No data </td>
-                    <td> No data </td>
-
-                </tr>
-
-                <tr>
-                    <td> 10</td>
-                    <td> No data </td>
-                    <td> No data </td>
-                    <td> No data </td>
-
-                </tr>
-
+                <tbody id="tableBody1">
+                    <!-- Wiersze tabeli będą dodawane dynamicznie tutaj -->
+                </tbody>
             </table>
         </section>
-<!--        <button id="addRowButton_right">Dodaj wiersz</button>-->
     </main>
-    <script></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('http://localhost:5000/get_activities')
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.getElementById('tableBody1');
+            let idCounter = 1; // Dodajemy licznik ID
+            for (let key in data) {
+                for (let activity of data[key]) {
+                    let row = document.createElement('tr');
 
+                    let cellID = document.createElement('td');
+                    cellID.textContent = idCounter++; // Używamy licznika jako ID
+                    row.appendChild(cellID);
+
+                    let cellActivity = document.createElement('td');
+                    cellActivity.textContent = key;
+                    row.appendChild(cellActivity);
+
+                    let cellPrevActivity = document.createElement('td');
+                    cellPrevActivity.textContent = activity[0] === '-' ? '-' : activity[0];
+                    row.appendChild(cellPrevActivity);
+
+                    let cellDuration = document.createElement('td');
+                    cellDuration.textContent = activity[1];
+                    row.appendChild(cellDuration);
+
+                    tableBody.appendChild(row);
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+    </script>
+
+<main class="table" id="right_table">
+    <section class="table__header">
+        <h1>Numeracja zdarzeń</h1>
+        <div class="input-group">
+            <input type="search" placeholder="Search Data...">
+            <img src="http://localhost:5000/get_search_png" alt="">
+        </div>
+        <div class="export__file">
+            <label for="export-file1" class="export__file-btn" title="Export File"></label>
+            <input type="checkbox" id="export-file1">
+            <div class="export__file-options">
+                <label>Export As   ➜</label>
+                <label for="export-file1" id="toPDF1">PDF <img src="http://localhost:5000/get_pdf_png" alt=""></label>
+                <label for="export-file1" id="toJSON1">JSON <img src="http://localhost:5000/get_json_png" alt=""></label>
+                <label for="export-file1" id="toCSV1">CSV <img src="http://localhost:5000/get_csv_png" alt=""></label>
+                <label for="export-file1" id="toEXCEL1">EXCEL <img src="http://localhost:5000/get_excel_png" alt=""></label>
+                <label for="export-file1" id="GENERATE1">FOR CPM <img src="http://localhost:5000/get_export_png" alt=""></label>
+            </div>
+        </div>
+    </section>
+    <section class="table__body">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID<span class="icon-arrow">↑</span></th>
+                    <th>Czynnosc<span class="icon-arrow">↑</span></th>
+                    <th>Poprzednik<span class="icon-arrow">↑</span></th>
+                    <th>Nastepnik<span class="icon-arrow">↑</span></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody2">
+                <!-- Wiersze tabeli będą dodawane dynamicznie tutaj -->
+            </tbody>
+        </table>
+    </section>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('http://localhost:5000/get_events') // Zmieniamy endpoint na /get_events
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.getElementById('tableBody2');
+            let idCounter = 1; // Dodajemy licznik ID
+            for (let key in data) {
+                for (let event of data[key]) {
+                    let row = document.createElement('tr');
+
+                    let cellID = document.createElement('td');
+                    cellID.textContent = idCounter; // Używamy licznika jako ID
+                    row.appendChild(cellID);
+
+                    let cellActivity = document.createElement('td');
+                    cellActivity.textContent = key;
+                    row.appendChild(cellActivity);
+
+                    let cellPrevActivity = document.createElement('td');
+                    cellPrevActivity.textContent = event[0];
+                    row.appendChild(cellPrevActivity);
+
+                    let cellNextActivity = document.createElement('td');
+                    cellNextActivity.textContent = event[1];
+                    row.appendChild(cellNextActivity);
+
+                    tableBody.appendChild(row);
+                }
+                idCounter++; // Inkrementujemy licznik ID poza pętlą zdarzeń
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>
 </body>
 
 </html>

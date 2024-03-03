@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import "./Input/style.css"
 
 const InputComponent = () => {
-  const [htmlData, setHtmlData] = useState(null);
+  const [htmlData, setHtmlData] = useState(null
+  );
   const [cssData, setCssData] = useState(null);
   const [jsData, setJsData] = useState(null);
 
   useEffect(() => {
     fetch('http://localhost:5000/get_html')
+
       .then(response => response.blob())
       .then(data => {
         const file = URL.createObjectURL(data);
@@ -21,10 +23,11 @@ const InputComponent = () => {
       .then(data => {
         setCssData(data);
       })
+
       .catch((error) => {
         console.error('Error:', error);
-      });
 
+      });
     fetch('http://localhost:5000/get_js')
       .then(response => response.text())
       .then(data => {
@@ -35,14 +38,18 @@ const InputComponent = () => {
       });
   }, []);
 
+
   useEffect(() => {
     if (htmlData && cssData && jsData) {
       const iframe = document.querySelector('iframe');
+
       iframe.onload = function() {
         const doc = iframe.contentWindow.document;
         if (doc.body) {
           const styleElement = doc.createElement('style');
+
           styleElement.textContent = cssData;
+
           doc.head.appendChild(styleElement);
 
           const scriptElement = doc.createElement('script');

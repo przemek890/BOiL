@@ -5,6 +5,10 @@ from src.logic.Gantt import Gantt
 from flask import send_file
 from src.logic.PlotGraph import Gplot
 from flask_cors import CORS
+from flask import Flask, jsonify, request
+import os
+import pandas as pd
+import io
 ''''''''
 app = Flask(__name__)
 CORS(app)
@@ -116,6 +120,35 @@ def get_search_png():
     current_script_path = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_script_path, "../../view/my-new-app/src/component/Input/images/search.png")
     return send_file(file_path, mimetype='image/png')
+
+@app.route('/save_table_to_csv/<table_name>', methods=['POST'])
+def save_table_to_csv(table_name):
+    data = request.get_json()['data']
+    print(data)
+    try:
+        data_io = io.StringIO(data)
+        df = pd.read_csv(data_io)
+        if table_name == 'Czynnosc_poprzedzajaca':
+            df.columns = ['ID', 'Czynnosc', 'Czynnosc_bezposrednio_poprzedzajaca', 'Czas_trwania']
+            df['Czynnosc_bezposrednio_poprzedzajaca'] = df.groupby('Czynnosc')['Czynnosc_bezposrednio_poprzedzajaca'].transform(lambda x: ''.join(x))
+            df = df.drop_duplicates(subset='Czynnosc')  # Zostaw tylko jeden rekord dla każdej Czynnosci
+            df = df.drop(columns=['ID'])  # Usuń kolumnę ID
+        elif table_name == 'Numeracja_zdarzen':
+            df.columns = ['ID', 'Czynnosc', 'Poprzednik', 'Nastepnik']
+            df = df.drop(columns=['ID'])  # Usuń kolumnę ID
+    except ValueError as e:
+        print(f"Error creating DataFrame: {e}")
+        return jsonify({"message": "Błąd podczas tworzenia DataFrame."})
+
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(current_script_path, "../../../Data/csv")
+
+    csv_file_path = os.path.join(path, f"{table_name}.csv")
+
+    df.to_csv(csv_file_path, index=False, mode='w')
+
+    return jsonify({"message": "Pomyślnie zapisano."})
+
 
 
 

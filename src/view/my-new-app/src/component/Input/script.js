@@ -20,6 +20,7 @@ function searchTable1() {
     });
 }
 
+
 // Funkcja sortowania dla pierwszej tabeli
 table_headings1.forEach((head, i) => {
     let sort_asc = true;
@@ -152,6 +153,31 @@ csv_btn.onclick = () => {
     downloadFile(csv, 'csv', 'customer orders');
 }
 
+// 5.5. Generate table for CPM method
+
+const generate_btn = document.querySelector('#GENERATE');
+const generate1_btn = document.querySelector('#GENERATE1');
+
+generate_btn.onclick = () => {
+    const csvData = toCSV(customers_table);
+    saveToServer(csvData, 'Czynnosc_poprzedzajaca');
+}
+
+const saveToServer = function (csvData, tableName) {
+    fetch('http://localhost:5000/save_table_to_csv/' + tableName, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({data: csvData})
+    })
+    .then(response => response.json())
+    .then(data => console.log(data.message))
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+};
+
 // 6. Converting HTML table to EXCEL File
 
 const excel_btn = document.querySelector('#toEXCEL');
@@ -279,6 +305,12 @@ csv_btn_2.onclick = () => {
     const csv = toCSV_2('#right_table');
     downloadFile_2(csv, 'csv', 'right_table_data');
 };
+
+generate1_btn.onclick = () => {
+    const csvData = toCSV_2('#right_table');
+    saveToServer(csvData, 'Numeracja_zdarzen');
+}
+
 
 // Funkcja eksportu do EXCEL dla drugiej tabeli
 const excel_btn_2 = document.querySelector('#toEXCEL1');
@@ -497,3 +529,5 @@ document.getElementById('addRowButton_customers').addEventListener('click', () =
 document.getElementById('addRowButton_right').addEventListener('click', () => {
     addRow('right_table');
 });
+
+//-----------------------------------------------------------

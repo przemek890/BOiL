@@ -450,7 +450,7 @@ const downloadFile_2 = function (data, fileType, fileName = '') {
 // Funkcja obsługująca kliknięcie w komórkę tabeli
 const handleCellClick = function(event) {
     const target = event.target;
-    if (target.tagName === 'TD') {
+    if (target.tagName === 'TD' && target.cellIndex !== 0) {
         const currentValue = target.textContent.trim();
         const input = document.createElement('input');
         input.value = currentValue;
@@ -472,7 +472,57 @@ const handleCellClick = function(event) {
         // Obsługa zdarzenia zatwierdzenia nowej wartości po wciśnięciu Enter
         input.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
-                target.textContent = input.value;
+                // Walidacja danych
+                const tableId = target.parentElement.parentElement.id;
+                const columnIndex = target.cellIndex;
+                const newValue = input.value;
+
+                if (!newValue) {
+                    alert('Nowa wartość nie może być pusta');
+                    return;
+                }
+
+                if (tableId === 'tableBody1') {
+                    if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+                    if (columnIndex === 2 && !/^[-A-Z]+$/.test(newValue)) {
+                        alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą lub ciągiem znaków dużych liter');
+                        return;
+                    }
+                    if (columnIndex === 3 && (Number.isFinite(Number(newValue))) &&  parseFloat(newValue) < 0) {
+                        alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
+                        return;
+                    }
+                }
+                else if (tableId === 'tableBody2') {
+                    if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody2 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+
+                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) < 0)) {
+                        alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
+                        return;
+                    }
+                }
+
+                target.textContent = newValue;
             }
         });
 
@@ -480,6 +530,7 @@ const handleCellClick = function(event) {
         input.focus();
     }
 };
+
 
 // Dodanie obsługi zdarzeń do wszystkich komórek tabeli customers_table
 const tableCells1 = document.querySelectorAll('#customers_table tbody td');

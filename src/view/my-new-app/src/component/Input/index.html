@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Funkcja obsługująca kliknięcie w komórkę tabeli
     const handleCellClick = function(event) {
         const target = event.target;
-        if (target.tagName === 'TD') {
+        if (target.tagName === 'TD' && target.cellIndex !== 0) {
             const currentValue = target.textContent.trim();
             const input = document.createElement('input');
             input.value = currentValue;
-            input.style.width = target.offsetWidth ;
-            input.style.height = target.offsetHeight ;
+            input.style.width = target.offsetWidth;
+            input.style.height = target.offsetHeight;
             input.style.boxSizing = 'border-box';
             input.style.padding = '5px';
             input.style.margin = '0';
@@ -77,7 +77,42 @@ document.addEventListener('DOMContentLoaded', function() {
             // Obsługa zdarzenia zatwierdzenia nowej wartości po wciśnięciu Enter
             input.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
-                    target.textContent = input.value;
+                    // Walidacja danych
+                    const tableId = target.parentElement.parentElement.id;
+                    const columnIndex = target.cellIndex;
+                    const newValue = input.value;
+
+
+                    if (!newValue) {
+                    alert('Nowa wartość nie może być pusta');
+                    return;
+                }
+
+                    if (tableId === 'tableBody1') {
+
+                     if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+
+                        if (columnIndex === 2 && !/^[-A-Z]+$/.test(newValue)) {
+                            alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą lub ciągiem znaków dużych liter');
+                            return;
+                        }
+                        if (columnIndex === 3 && (Number.isFinite(Number(newValue))) && parseFloat(newValue) < 0) {
+                            alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
+                            return;
+                        }
+                    }
+
+                    target.textContent = newValue;
                 }
             });
 
@@ -86,35 +121,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+
     fetch('http://localhost:5000/get_activities')
         .then(response => response.json())
         .then(data => {
             let tableBody = document.getElementById('tableBody1');
             for (let key in data) {
-                for (let activity of data[key]) {
-                    let row = document.createElement('tr');
+                let activities = data[key];
+                let activityString = activities.map(activity => activity[0]).join('');
 
-                    let cellID = document.createElement('td');
-                    cellID.textContent = idCounter++;
-                    row.appendChild(cellID);
+                let row = document.createElement('tr');
+                let cellID = document.createElement('td');
+                cellID.textContent = idCounter++;
+                row.appendChild(cellID);
 
-                    let cellActivity = document.createElement('td');
-                    cellActivity.textContent = key;
-                    row.appendChild(cellActivity);
+                let cellActivity = document.createElement('td');
+                cellActivity.textContent = key;
+                row.appendChild(cellActivity);
 
-                    let cellPrevActivity = document.createElement('td');
-                    cellPrevActivity.textContent = activity[0] === '-' ? '-' : activity[0];
-                    row.appendChild(cellPrevActivity);
+                let cellPrevActivity = document.createElement('td');
+                cellPrevActivity.textContent = activityString;
+                row.appendChild(cellPrevActivity);
 
-                    let cellDuration = document.createElement('td');
-                    cellDuration.textContent = activity[1];
-                    row.appendChild(cellDuration);
+                let cellDuration = document.createElement('td');
+                cellDuration.textContent = activities[0][1];
+                row.appendChild(cellDuration);
 
-                    tableBody.appendChild(row);
-                }
+                tableBody.appendChild(row);
             }
         })
         .catch(error => console.error('Error:', error));
+
+
 
     document.getElementById('addRow1').addEventListener('click', function() {
         let tableBody = document.getElementById('tableBody1');
@@ -192,39 +230,70 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     let idCounter = 1; // Przenosimy licznik ID na zewnątrz funkcji DOMContentLoaded
 
-    // Funkcja obsługująca kliknięcie w komórkę tabeli
-    const handleCellClick = function(event) {
-        const target = event.target;
-        if (target.tagName === 'TD') {
-            const currentValue = target.textContent.trim();
-            const input = document.createElement('input');
-            input.value = currentValue;
-            input.style.width = target.offsetWidth ;
-            input.style.height = target.offsetHeight ;
-            input.style.boxSizing = 'border-box';
-            input.style.padding = '5px';
-            input.style.margin = '0';
-            input.style.border = '1px solid #ccc';
-            input.style.borderRadius = '3px';
-            input.style.fontSize = 'inherit';
-            input.style.fontFamily = 'inherit';
-            input.style.textAlign = 'center';
+ // Funkcja obsługująca kliknięcie w komórkę tabeli
+   const handleCellClick = function(event) {
+    const target = event.target;
+    if (target.tagName === 'TD' && target.cellIndex !== 0) {
+        const currentValue = target.textContent.trim();
+        const input = document.createElement('input');
+        input.value = currentValue;
+        input.style.width = target.offsetWidth ;
+        input.style.height = target.offsetHeight ;
+        input.style.boxSizing = 'border-box';
+        input.style.padding = '5px';
+        input.style.margin = '0';
+        input.style.border = '1px solid #ccc';
+        input.style.borderRadius = '3px';
+        input.style.fontSize = 'inherit';
+        input.style.fontFamily = 'inherit';
+        input.style.textAlign = 'center';
 
-            // Po utworzeniu pola input, zastępujemy nim komórkę tabeli
-            target.innerHTML = '';
-            target.appendChild(input);
+        // Po utworzeniu pola input, zastępujemy nim komórkę tabeli
+        target.innerHTML = '';
+        target.appendChild(input);
 
-            // Obsługa zdarzenia zatwierdzenia nowej wartości po wciśnięciu Enter
-            input.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    target.textContent = input.value;
+        // Obsługa zdarzenia zatwierdzenia nowej wartości po wciśnięciu Enter
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // Walidacja danych
+                const tableId = target.parentElement.parentElement.id;
+                const columnIndex = target.cellIndex;
+                const newValue = input.value;
+
+
+                if (!newValue) {
+                    alert('Nowa wartość nie może być pusta');
+                    return;
                 }
-            });
 
-            // Ustawienie fokusa na polu input po jego utworzeniu
-            input.focus();
-        }
-    };
+                if (tableId === 'tableBody2') {
+                    if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody2 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+
+                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) < 0)) {
+                        alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
+                        return;
+                    }
+                }
+
+                target.textContent = newValue;
+            }
+        });
+
+        // Ustawienie fokusa na polu input po jego utworzeniu
+        input.focus();
+    }
+};
+
 
     fetch('http://localhost:5000/get_events') // Zmieniamy endpoint na /get_events
         .then(response => response.json())

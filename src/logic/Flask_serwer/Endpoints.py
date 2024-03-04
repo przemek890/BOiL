@@ -22,7 +22,7 @@ def get_activities():
     current_script_path = os.path.dirname(os.path.abspath(__file__))
     csv_file_path = os.path.join(current_script_path, "../../../Data/csv", "Czynnosc_poprzedzajaca.csv")
     activities = create_activities(csv_file_path)
-    activities = {k: [(i[0], int(i[1])) for i in v] for k, v in activities.items()}
+    activities = {k: [(i[0], float(i[1])) for i in v] for k, v in activities.items()}
     print(activities)
     return jsonify(activities)
 
@@ -124,6 +124,7 @@ def get_search_png():
 @app.route('/save_table_to_csv/<table_name>', methods=['POST'])
 def save_table_to_csv(table_name):
     data = request.get_json()['data']
+
     print(data)
     try:
         data_io = io.StringIO(data)

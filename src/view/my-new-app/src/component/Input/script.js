@@ -549,8 +549,15 @@ const handleCellClick = function(event) {
                         }
                     }
 
-                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) < 0)) {
+                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) <= 0)) {
                         alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
+                        return;
+                    }
+                    const row = target.parentElement;
+                    const column2Value = row.cells[2].textContent;
+                    const column3Value = row.cells[3].textContent;
+                    if (newValue === column2Value || newValue === column3Value) {
+                        alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
                         return;
                     }
                 }

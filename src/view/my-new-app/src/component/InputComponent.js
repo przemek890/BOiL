@@ -21,7 +21,6 @@ const InputComponent = () => {
       console.error('Error:', error);
     });
   }, []);
-
   useEffect(() => {
     if (htmlData && cssData && jsData) {
       const iframe = document.querySelector('iframe');
@@ -47,5 +46,6 @@ const InputComponent = () => {
     <iframe title="My HTML" style={{width: '100vw', height: '100vh'}} />
   );
 };
+
 
 export default InputComponent;

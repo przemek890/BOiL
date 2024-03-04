@@ -32,7 +32,7 @@ const Main_window = () => {
                             <Button color="inherit" onClick={() => setActiveTab(0)}>Input</Button>
                             <Button color="inherit" onClick={() => setActiveTab(1)}>Graph</Button>
                             <Button color="inherit" onClick={() => setActiveTab(2)}>Gantt</Button>
-                            <Button color="inherit" onClick={() => setActiveTab(3)}>CPM Table</Button>
+                            <Button color="inherit" onClick={() => setActiveTab(3)}>CPM</Button>
                             <Button color="inherit" onClick={() => setDarkMode(!darkMode)}>
                                 {darkMode ? <FaSun /> : <FaMoon />}
                             </Button>

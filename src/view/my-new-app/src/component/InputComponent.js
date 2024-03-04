@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import "./Input/style.css"
-
+///////////////////////////
+// index.html/script -> nowe rekordy
+// script.js-> stare rekordy (poczatkowe)
+///////////////////////////
 const InputComponent = () => {
   const [htmlData, setHtmlData] = useState(null);
   const [cssData, setCssData] = useState(null);

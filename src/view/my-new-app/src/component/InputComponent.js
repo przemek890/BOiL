@@ -20,6 +20,7 @@ const InputComponent = () => {
     .catch((error) => {
       console.error('Error:', error);
     });
+
   }, []);
   useEffect(() => {
     if (htmlData && cssData && jsData) {
@@ -41,7 +42,6 @@ const InputComponent = () => {
       iframe.src = htmlData;
     }
   }, [htmlData, cssData, jsData]);
-
   return (
     <iframe title="My HTML" style={{width: '100vw', height: '100vh'}} />
   );

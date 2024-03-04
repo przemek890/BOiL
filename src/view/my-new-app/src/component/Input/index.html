@@ -102,10 +102,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
 
-                        if (columnIndex === 2 && !/^[-A-Z]+$/.test(newValue)) {
-                            alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą lub ciągiem znaków dużych liter');
-                            return;
+                        if (columnIndex === 2) {
+                            const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                            const newValueChars = Array.from(newValue);
+                            const uniqueChars = [...new Set(newValueChars)];
+                            if (newValueChars.length !== uniqueChars.length) {
+                                alert('Nie można wpisać dwóch takich samych liter. Każda litera musi być unikalna.');
+                                return;
+                            }
+                            if (!newValueChars.every(char => existingValues.includes(char) || char === '-')) {
+                                alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą (ciągiem różnych liter), która już istnieje w kolumnie Czynnosc');
+                                return;
+                            }
+                            const row = target.parentElement;
+                            const column1Value = row.cells[1].textContent;
+                            if (newValue === column1Value) {
+                                alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
+                                return;
+                            }
                         }
+
                         if (columnIndex === 3 && (Number.isFinite(Number(newValue))) && parseFloat(newValue) < 0) {
                             alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
                             return;

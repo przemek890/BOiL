@@ -7,6 +7,8 @@ const search1 = document.querySelector('#customers_table .input-group input'),
 search1.addEventListener('input', searchTable1);
 
 function searchTable1() {
+    const table_rows1 = document.querySelectorAll('#customers_table tbody tr');
+
     table_rows1.forEach((row, i) => {
         let table_data = row.textContent.toLowerCase(),
             search_data = search1.value.toLowerCase();
@@ -20,7 +22,6 @@ function searchTable1() {
     });
 }
 
-
 // Funkcja sortowania dla pierwszej tabeli
 table_headings1.forEach((head, i) => {
     let sort_asc = true;
@@ -29,6 +30,8 @@ table_headings1.forEach((head, i) => {
         head.classList.add('active');
 
         document.querySelectorAll('#customers_table td').forEach(td => td.classList.remove('active'));
+        // Pobieramy wiersze tabeli za każdym razem, gdy funkcja jest wywoływana
+        const table_rows1 = document.querySelectorAll('#customers_table tbody tr');
         table_rows1.forEach(row => {
             row.querySelectorAll('td')[i].classList.add('active');
         });
@@ -36,12 +39,12 @@ table_headings1.forEach((head, i) => {
         head.classList.toggle('asc', sort_asc);
         sort_asc = head.classList.contains('asc') ? false : true;
 
-        sortTable1(i, sort_asc);
+        sortTable1(i, sort_asc, table_rows1);
     };
 });
 
 // Funkcja sortowania dla pierwszej tabeli
-function sortTable1(column, sort_asc) {
+function sortTable1(column, sort_asc, table_rows1) {
     [...table_rows1].sort((a, b) => {
         let first_row = a.querySelectorAll('td')[column].textContent.toLowerCase(),
             second_row = b.querySelectorAll('td')[column].textContent.toLowerCase();
@@ -164,6 +167,13 @@ generate_btn.onclick = () => {
 }
 
 const saveToServer = function (csvData, tableName) {
+    for (let row of csvData.split('\n')) {
+        let columns = row.split(',');
+        if (columns[1] === "-" || columns[3] === "-") {
+            alert("Błedne/Niekompletne dane");
+            return;
+        }
+    }
     fetch('http://localhost:5000/save_table_to_csv/' + tableName, {
         method: 'POST',
         headers: {
@@ -232,8 +242,6 @@ const downloadFile = function (data, fileType, fileName = '') {
 
 
 //---------------
-
-
 const search2 = document.querySelector('#right_table .input-group input'),
     table_rows2 = document.querySelectorAll('#right_table tbody tr'),
     table_headings2 = document.querySelectorAll('#right_table thead th');
@@ -242,6 +250,8 @@ const search2 = document.querySelector('#right_table .input-group input'),
 search2.addEventListener('input', searchTable2);
 
 function searchTable2() {
+    const table_rows2 = document.querySelectorAll('#right_table tbody tr');
+
     table_rows2.forEach((row, i) => {
         let table_data = row.textContent.toLowerCase(),
             search_data = search2.value.toLowerCase();
@@ -255,6 +265,7 @@ function searchTable2() {
     });
 }
 
+
 // 2. Sorting | Ordering data of HTML table
 table_headings2.forEach((head, i) => {
     let sort_asc = true;
@@ -263,6 +274,8 @@ table_headings2.forEach((head, i) => {
         head.classList.add('active');
 
         document.querySelectorAll('#right_table td').forEach(td => td.classList.remove('active'));
+        // Pobieramy wiersze tabeli za każdym razem, gdy funkcja jest wywoływana
+        const table_rows2 = document.querySelectorAll('#right_table tbody tr');
         table_rows2.forEach(row => {
             row.querySelectorAll('td')[i].classList.add('active');
         });
@@ -270,11 +283,11 @@ table_headings2.forEach((head, i) => {
         head.classList.toggle('asc', sort_asc);
         sort_asc = head.classList.contains('asc') ? false : true;
 
-        sortTable2(i, sort_asc);
+        sortTable2(i, sort_asc, table_rows2);
     };
 });
 
-function sortTable2(column, sort_asc) {
+function sortTable2(column, sort_asc, table_rows2) {
     [...table_rows2].sort((a, b) => {
         let first_row = a.querySelectorAll('td')[column].textContent.toLowerCase(),
             second_row = b.querySelectorAll('td')[column].textContent.toLowerCase();
@@ -283,7 +296,6 @@ function sortTable2(column, sort_asc) {
     })
         .map(sorted_row => document.querySelector('#right_table tbody').appendChild(sorted_row));
 }
-
 // Dla drugiej tabeli (right_table)
 
 // Funkcja eksportu do PDF dla drugiej tabeli
@@ -494,10 +506,25 @@ const handleCellClick = function(event) {
                             return;
                         }
                     }
-                    if (columnIndex === 2 && !/^[-A-Z]+$/.test(newValue)) {
-                        alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą lub ciągiem znaków dużych liter');
+                if (columnIndex === 2) {
+                    const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                    const newValueChars = Array.from(newValue);
+                    const uniqueChars = [...new Set(newValueChars)];
+                    if (newValueChars.length !== uniqueChars.length) {
+                        alert('Nie można wpisać dwóch takich samych liter. Każda litera musi być unikalna.');
                         return;
                     }
+                    if (!newValueChars.every(char => existingValues.includes(char) || char === '-')) {
+                        alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą (ciągiem różnych liter), która już istnieje w kolumnie Czynnosc');
+                        return;
+                    }
+                    const row = target.parentElement;
+                    const column1Value = row.cells[1].textContent;
+                    if (newValue === column1Value) {
+                        alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
+                        return;
+                    }
+                }
                     if (columnIndex === 3 && (Number.isFinite(Number(newValue))) &&  parseFloat(newValue) < 0) {
                         alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
                         return;

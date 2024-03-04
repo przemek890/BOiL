@@ -556,10 +556,16 @@ const handleCellClick = function(event) {
                     const row = target.parentElement;
                     const column2Value = row.cells[2].textContent;
                     const column3Value = row.cells[3].textContent;
-                    if (newValue === column2Value || newValue === column3Value) {
-                        alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
+
+                    if (columnIndex === 2 && newValue >= column3Value) {
+                        alert("Błąd - pętla w grafie!");
                         return;
                     }
+                    if (columnIndex === 3 && newValue <= column2Value) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+
                 }
 
                 target.textContent = newValue;

@@ -525,9 +525,15 @@ const handleCellClick = function(event) {
                         return;
                     }
                 }
-                    if (columnIndex === 3 && (Number.isFinite(Number(newValue))) &&  parseFloat(newValue) < 0) {
-                        alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
-                        return;
+                    if (columnIndex === 3) {
+                        if (isNaN(newValue)) {
+                            alert('Wartości w kolumnie Czas_trwania muszą być liczbami');
+                            return;
+                        }
+                        if (!Number.isFinite(Number(newValue)) || parseFloat(newValue) < 0) {
+                            alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
+                            return;
+                        }
                     }
                 }
                 else if (tableId === 'tableBody2') {

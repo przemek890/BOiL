@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "./Input/style.css"
+import {CircularProgress} from "@mui/material";
 ///////////////////////////
 // index.html/script -> nowe rekordy
 // script.js-> stare rekordy (poczatkowe)
@@ -8,6 +9,7 @@ const InputComponent = () => {
   const [htmlData, setHtmlData] = useState(null);
   const [cssData, setCssData] = useState(null);
   const [jsData, setJsData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
@@ -19,6 +21,7 @@ const InputComponent = () => {
       setHtmlData(URL.createObjectURL(htmlData));
       setCssData(cssData);
       setJsData(jsData);
+      setLoading(false);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -46,7 +49,15 @@ const InputComponent = () => {
     }
   }, [htmlData, cssData, jsData]);
   return (
-    <iframe title="My HTML" style={{width: '100vw', height: '100vh'}} />
+    <div>
+      {loading ? (
+          <CircularProgress style={{ marginTop: '20px' }} ></CircularProgress>
+      ) : (
+          <iframe title="My HTML" style={{width: '100vw', height: '100vh'}}/>
+      )
+      }
+    </div>
+
   );
 };
 

@@ -549,10 +549,23 @@ const handleCellClick = function(event) {
                         }
                     }
 
-                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) < 0)) {
+                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) <= 0)) {
                         alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
                         return;
                     }
+                    const row = target.parentElement;
+                    const column2Value = row.cells[2].textContent;
+                    const column3Value = row.cells[3].textContent;
+
+                    if (columnIndex === 2 && newValue >= column3Value) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+                    if (columnIndex === 3 && newValue <= column2Value) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+
                 }
 
                 target.textContent = newValue;

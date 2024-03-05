@@ -306,6 +306,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
                         return;
                     }
+                    const row = target.parentElement;
+                    const column2Value = row.cells[2].textContent;
+                    const column3Value = row.cells[3].textContent;
+
+                    if (columnIndex === 2 && newValue >= column3Value) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+                    if (columnIndex === 3 && newValue <= column2Value) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
                 }
 
                 target.textContent = newValue;

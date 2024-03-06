@@ -557,7 +557,7 @@ const handleCellClick = function(event) {
                     const column2Value = row.cells[2].textContent;
                     const column3Value = row.cells[3].textContent;
 
-                    if (columnIndex === 2 && newValue >= column3Value) {
+                    if (columnIndex === 2 && column3Value !== "-" && newValue >= column3Value) {
                         alert("Błąd - pętla w grafie!");
                         return;
                     }

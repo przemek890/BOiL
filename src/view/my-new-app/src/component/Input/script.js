@@ -458,6 +458,64 @@ const downloadFile_2 = function (data, fileType, fileName = '') {
 
 //-----------------------------------------------------------------edycja tabeli-------------------------------------------
 
+// Buduje graf na podstawie aktualnego stanu tabeli
+function buildGraphFromTable() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody1 tr'));
+    for (const row of rows) {
+        const cells = row.children;
+        const node = cells[1].textContent;
+        const edges = cells[2].textContent;
+        if (edges === '-') {
+            graph[node] = []; // Jeśli dla danej czynności nie ma bezpośrednio poprzedzających czynności, przypisujemy pustą tablicę
+        } else {
+            graph[node] = edges.split(',');
+        }
+    }
+    return graph;
+}
+
+// Sprawdza, czy wprowadzona zmiana spowoduje cykl w grafie
+function createsCycle(graph, node, newValue) {
+    const visited = {};
+    const stack = {};
+
+    function isCyclic(v) {
+        if (!visited[v]) {
+            visited[v] = true;
+            stack[v] = true;
+            const neighbors = graph[v];
+            if (neighbors && Array.isArray(neighbors)) {
+                for (const neighbor of neighbors) {
+                    if (!visited[neighbor] && isCyclic(neighbor)) {
+                        return true;
+                    } else if (stack[neighbor]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        stack[v] = false;
+        return false;
+    }
+
+    // Sprawdź, czy nowa wartość nie jest już bezpośrednio poprzedzana przez węzeł, który próbujemy zmienić
+    for (const key in graph) {
+        if (graph[key].includes(node) && newValue.includes(key)) {
+            return true;
+        }
+    }
+
+    graph[node] = newValue.split(',');
+    for (const node in graph) {
+        if (isCyclic(node)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 // Funkcja obsługująca kliknięcie w komórkę tabeli
 const handleCellClick = function(event) {
@@ -524,6 +582,12 @@ const handleCellClick = function(event) {
                         alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
                         return;
                     }
+
+                     const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
+                        if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
+                            alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
+                            return;
+                        }
                 }
                     if (columnIndex === 3) {
                         if (isNaN(newValue)) {
@@ -535,6 +599,8 @@ const handleCellClick = function(event) {
                             return;
                         }
                     }
+
+
                 }
                 else if (tableId === 'tableBody2') {
                     if (columnIndex === 1) {

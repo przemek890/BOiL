@@ -457,7 +457,6 @@ const downloadFile_2 = function (data, fileType, fileName = '') {
 
 
 //-----------------------------------------------------------------edycja tabeli-------------------------------------------
-
 // Buduje graf na podstawie aktualnego stanu tabeli
 function buildGraphFromTable() {
     const graph = {};
@@ -515,8 +514,6 @@ function createsCycle(graph, node, newValue) {
     return false;
 }
 
-
-
 // Funkcja obsługująca kliknięcie w komórkę tabeli
 const handleCellClick = function(event) {
     const target = event.target;
@@ -573,7 +570,7 @@ const handleCellClick = function(event) {
                         return;
                     }
                     if (!newValueChars.every(char => existingValues.includes(char) || char === '-')) {
-                        alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą (ciągiem różnych liter), która już istnieje w kolumnie Czynnosc');
+                        alert('Czynnosc_bezposrednio_poprzedzajaca musi być "-" lub dużą literą (ciągiem różnych liter), która już istnieje w kolumnie Czynnosc');
                         return;
                     }
                     const row = target.parentElement;
@@ -582,12 +579,6 @@ const handleCellClick = function(event) {
                         alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
                         return;
                     }
-
-                     const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
-                        if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
-                            alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
-                            return;
-                        }
                 }
                     if (columnIndex === 3) {
                         if (isNaN(newValue)) {
@@ -599,7 +590,11 @@ const handleCellClick = function(event) {
                             return;
                         }
                     }
-
+                      const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
+                            if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
+                                alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
+                                return;
+                            }
 
                 }
                 else if (tableId === 'tableBody2') {

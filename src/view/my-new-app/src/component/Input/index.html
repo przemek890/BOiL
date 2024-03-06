@@ -177,12 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
                                 return;
                             }
-
-                            const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
-                            if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
-                                alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
-                                return;
-                            }
                         }
                             if (columnIndex === 3) {
                                 // Sprawdzamy, czy newValue jest liczbą
@@ -195,6 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
                                     return;
                                 }
+                            }
+                           const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
+                            if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
+                                alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
+                                return;
                             }
                     }
 

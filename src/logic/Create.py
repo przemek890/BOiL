@@ -52,6 +52,8 @@ def create_table(activities):
     for activity in LF_dict:
         if LF_dict[activity] == float('inf'):
             LF_dict[activity] = max_EF
+    critical_path = []
+    max_t = 0
     for activity, values in activities.items():
         for value in values:
             t = value[1]
@@ -60,26 +62,12 @@ def create_table(activities):
             LF = LF_dict[activity]
             LS = LF - t
             Rezerwa = LS - ES
-            Czynnosc_krytyczna = 'tak' if Rezerwa == 0 else 'nie'
+            if Rezerwa == 0 and EF > max_t:
+                max_t = EF
+                critical_path.append(activity)
+            Czynnosc_krytyczna = 'tak' if Rezerwa == 0 and activity in critical_path else 'nie'
             row = pd.DataFrame({'Czynność': [activity],'t': [t], 'ES': [ES], 'EF': [EF], 'LS': [LS], 'LF': [LF], 'Rezerwa': [Rezerwa], 'Czynność krytyczna': [Czynnosc_krytyczna]})
             df = pd.concat([df, row], ignore_index=True)
     df = df.loc[df.groupby('Czynność')['ES'].idxmax()]
-
-    def longest_sequence(df, activities):
-        df_zero_reserve = df[df['Rezerwa'] == 0].sort_values(by='EF')
-        print(df_zero_reserve)
-        selected_activities = []
-        current_end_time = 0
-        for index, row in df_zero_reserve.iterrows():
-            if row['ES'] >= current_end_time:
-                preceding_activities = [value[0] for value in activities[row['Czynność']] if value[0] != '-']
-                if all(activity in selected_activities for activity in preceding_activities):
-                    selected_activities.append(row['Czynność'])
-                    current_end_time = row['EF']
-        df['Czynność krytyczna'] = df['Czynność'].apply(lambda x: 'tak' if x in selected_activities else 'nie')
-        return df
-
-    df = longest_sequence(df, activities)
     return df
-
 

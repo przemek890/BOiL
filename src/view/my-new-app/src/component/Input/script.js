@@ -166,14 +166,163 @@ generate_btn.onclick = () => {
     saveToServer(csvData, 'Czynnosc_poprzedzajaca');
 }
 
+function buildGraphFromTable1() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody1 tr'));
+    for (const row of rows) {
+        const cells = row.children;
+        const node = cells[1].textContent;
+        const edges = cells[2].textContent;
+        if (edges === '-') {
+            graph[node] = [];
+        } else {
+            graph[node] = edges.split('');
+        }
+    }
+    return graph;
+}
+
+function isWeaklyConnected2() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody2 tr'));
+
+    // Budowanie grafu
+    rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td'));
+        const edge = cells[0].innerText;
+        const predecessor = cells[1].innerText;
+        const successor = cells[2].innerText;
+
+        if (!graph[predecessor]) {
+            graph[predecessor] = [];
+        }
+        if (!graph[successor]) {
+            graph[successor] = [];
+        }
+
+        graph[predecessor].push({edge, node: successor});
+        graph[successor].push({edge, node: predecessor}); // dla grafu nieskierowanego
+    });
+
+    // Sprawdzanie spójności grafu
+    const visited = {};
+    const dfs = node => {
+        visited[node] = true;
+        graph[node].forEach(edge => {
+            if (!visited[edge.node]) {
+                dfs(edge.node);
+            }
+        });
+    };
+
+    dfs(Object.keys(graph)[0]);
+
+    const isConnected = Object.keys(graph).every(node => visited[node]);
+
+    return isConnected;
+}
+
+
+function isWeaklyConnected1(graph) {
+    let undirectedGraph = convertToUndirected(graph);
+    let visited = {};
+    let startNode = Object.keys(undirectedGraph)[0];
+    dfs(undirectedGraph, startNode, visited);
+    return Object.keys(undirectedGraph).length === Object.keys(visited).length;
+}
+
+function convertToUndirected(graph) {
+    let undirectedGraph = {...graph};
+
+    for (let node in graph) {
+        for (let neighbor of graph[node]) {
+            if (!undirectedGraph[neighbor]) {
+                undirectedGraph[neighbor] = [];
+            }
+            undirectedGraph[neighbor].push(node);
+        }
+    }
+
+    return undirectedGraph;
+}
+
+function dfs(graph, node, visited) {
+    visited[node] = true;
+
+    for (let neighbor of graph[node]) {
+        if (!visited[neighbor]) {
+            dfs(graph, neighbor, visited);
+        }
+    }
+}
+
+function buildGraphFromTable2() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody2 tr'));
+    rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td'));
+        const edge = cells[1].innerText;
+        const node1 = cells[2].innerText;
+        const node2 = cells[3].innerText;
+
+        if (!graph[node1]) {
+            graph[node1] = [];
+        }
+        if (!graph[node2]) {
+            graph[node2] = [];
+        }
+        graph[node1].push({edge, node: node2});
+        graph[node2].push({edge, node: node1});
+    });
+
+    return graph;
+}
+
+function checkGraphConnectivity(graph) {
+    const visited = new Set();
+    const stack = [Object.keys(graph)[0]];
+
+    while (stack.length > 0) {
+        const node = stack.pop();
+        if (!visited.has(node)) {
+            visited.add(node);
+            const edges = graph[node];
+            if (edges) {
+                edges.forEach(edge => stack.push(edge.node));
+            }
+        }
+    }
+    console.log(graph)
+    return Object.keys(graph).length === visited.size;
+}
+
+
+
 const saveToServer = function (csvData, tableName) {
     for (let row of csvData.split('\n')) {
         let columns = row.split(',');
-        if (columns[1] === "-" || columns[3] === "-") {
+        if ((columns[1] === "-" || columns[3] === "-") && tableName === 'Czynnosc_poprzedzajaca') {
+            alert("Błedne/Niekompletne dane");
+            return;
+        }
+        if ((columns[1] === "-" || columns[2] === "-" || columns[3] === "-") && tableName === 'Numeracja_zdarzen') {
             alert("Błedne/Niekompletne dane");
             return;
         }
     }
+    if (tableName === 'Czynnosc_poprzedzajaca') {
+            graph = buildGraphFromTable1();
+            if(!isWeaklyConnected1(graph)) {
+                alert("Graf niespójny w sensie słabym");
+            }
+        }
+    if (tableName === 'Numeracja_zdarzen') {
+        graph = buildGraphFromTable2();
+            if(!checkGraphConnectivity(graph)) {
+                alert("Graf niespójny w sensie słabym");
+            }
+        }
+
     fetch('http://localhost:5000/save_table_to_csv/' + tableName, {
         method: 'POST',
         headers: {

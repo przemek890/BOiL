@@ -26,13 +26,13 @@ const InputComponent = () => {
     .catch((error) => {
       console.error('Error:', error);
     });
-
   }, []);
   useEffect(() => {
     if (htmlData && cssData && jsData) {
       const iframe = document.querySelector('iframe');
       iframe.onload = function() {
         const doc = iframe.contentWindow.document;
+
         if (doc.body) {
           const styleElement = doc.createElement('style');
           styleElement.textContent = cssData;
@@ -57,7 +57,6 @@ const InputComponent = () => {
       )
       }
     </div>
-
   );
 };
 

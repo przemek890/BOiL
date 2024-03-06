@@ -26,7 +26,7 @@ const StyledDiv = styled('div')({
 
 const StyledTableCellBody = styled(TableCell)(({ theme, isCritical }) => ({
   color: 'black',
-  backgroundColor: isCritical ? '#f0f0f0' : 'white',
+  backgroundColor: isCritical ? '#e5e5e5' : 'white',
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({

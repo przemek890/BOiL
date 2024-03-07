@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme, Typography } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  useTheme,
+  Typography,
+  CircularProgress
+} from '@mui/material';
 import { styled } from '@mui/system';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,12 +46,13 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 
 const CPMTableComponent = () => {
   const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const theme = useTheme();
 
   useEffect(() => {
     fetch('http://localhost:5000/get_tableCPM')
       .then(response => response.json())
-      .then(data => setTableData(data));
+      .then(data => {setTableData(data);setLoading(false);});
   }, []);
 
   return (
@@ -48,8 +60,8 @@ const CPMTableComponent = () => {
       <Typography variant="h4" component="div" gutterBottom align="center" style={{ color: 'white', fontWeight: 'bold' }}>
         CRITICAL PATH METHOD TABLE
       </Typography>
-      <StyledTableContainer component={Paper}>
-        {tableData.length > 0 && (
+      {loading ? (<CircularProgress style={{ marginTop: '20px' }} ></CircularProgress>) : (      <StyledTableContainer component={Paper}>
+      {tableData.length > 0 && (
           <Table>
             <TableHead>
               <TableRow>
@@ -65,21 +77,21 @@ const CPMTableComponent = () => {
             </TableHead>
             <TableBody>
               {tableData.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.Czynność}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row['Czynność krytyczna']}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.EF}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.ES}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.LF}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.LS}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.Rezerwa}</StyledTableCellBody>
-                  <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.t}</StyledTableCellBody>
-                </StyledTableRow>
+                  <StyledTableRow key={index}>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.Czynność}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row['Czynność krytyczna']}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.EF}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.ES}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.LF}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.LS}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.Rezerwa}</StyledTableCellBody>
+                    <StyledTableCellBody isCritical={row['Czynność krytyczna'] === 'tak'}>{row.t}</StyledTableCellBody>
+                  </StyledTableRow>
               ))}
             </TableBody>
           </Table>
-        )}
-      </StyledTableContainer>
+      )}
+    </StyledTableContainer>)}
     </StyledDiv>
   );
 };

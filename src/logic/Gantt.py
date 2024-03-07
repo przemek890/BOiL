@@ -34,23 +34,25 @@ def Gantt(activities):
     fig.update_layout(paper_bgcolor='rgba(1,1,1,0.5)')
     fig.update_yaxes(autorange="reversed", automargin=True)
     fig.update_xaxes(visible=False)
-
+    # print(colors)
+    it = 0
     for i, row in table.iterrows():
         dependencies = row['Dependency']
+        # color = fig["data"][i]["marker"]["color"]
+        color = "red"
         if dependencies[0] != "-":
             for dependency in dependencies:
                 dr = table[table["Czynność"] == dependency].iloc[0]
-
                 fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(dr['EF']), formatuj_czas_na_date(row['ES'])],
                                          y=[dr["Czynność"],  dr['Czynność']],
                                          mode="lines",
-                                         line=dict(color="red", width=3),
+                                         line=dict(color=color, width=3),
                                          showlegend=False,
                                          hoverinfo='none'))
                 fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(row['ES']), formatuj_czas_na_date(row['ES'])],
                                          y=[dr["Czynność"],  row['Czynność']],
                                          mode="lines",
-                                         line=dict(color="red", width=3),
+                                         line=dict(color=color, width=3),
                                          showlegend=False,
                                          hoverinfo='none'))
                 fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(row["ES"])],

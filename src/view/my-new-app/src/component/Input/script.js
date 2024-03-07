@@ -159,6 +159,7 @@ csv_btn.onclick = () => {
 // 5.5. Generate table for CPM method
 
 const generate_btn = document.querySelector('#GENERATE');
+const generate1_btn = document.querySelector('#GENERATE1');
 
 generate_btn.onclick = () => {
     const csvData = toCSV(customers_table);
@@ -180,7 +181,6 @@ function buildGraphFromTable1() {
     }
     return graph;
 }
-
 
 function isWeaklyConnected1(graph) {
     let undirectedGraph = convertToUndirected(graph);
@@ -214,7 +214,6 @@ function dfs(graph, node, visited) {
         }
     }
 }
-
 const saveToServer = function (csvData, tableName) {
     for (let row of csvData.split('\n')) {
         let columns = row.split(',');

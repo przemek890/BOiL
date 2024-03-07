@@ -1,7 +1,9 @@
 Czynnosc,Czynnosc_bezposrednio_poprzedzajaca,Czas_trwania
 A,-,5
-B,A,3
-C,-,6
-D,A,7
-E,D,3
-F,CBD,5
+B,-,7
+C,A,6
+D,A,8
+E,B,3
+F,C,4
+G,C,2
+H,EDF,5

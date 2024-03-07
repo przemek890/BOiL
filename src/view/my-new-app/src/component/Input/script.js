@@ -767,17 +767,15 @@ const handleCellClick = function(event) {
                     const column2Value = row.cells[2].textContent;
                     const column3Value = row.cells[3].textContent;
 
-                    if (columnIndex === 2 && column3Value !== "-" && newValue >= column3Value) {
+                    if (columnIndex === 2 && column3Value !== "-" && parseInt(newValue) >= parseInt(column3Value)) {
                         alert("Błąd - pętla w grafie!");
                         return;
                     }
-                    if (columnIndex === 3 && newValue <= column2Value) {
+                    if (columnIndex === 3 && parseInt(newValue) <= parseInt(column2Value)) {
                         alert("Błąd - pętla w grafie!");
                         return;
                     }
-
                 }
-
                 target.textContent = newValue;
             }
         });

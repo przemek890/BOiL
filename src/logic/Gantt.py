@@ -3,42 +3,9 @@ from datetime import timedelta, datetime
 import numpy as np
 import pandas as pd
 import plotly.express as ex
-from src.logic.Create import create_table
+import plotly.graph_objects as go
 
-def draw_arrow_between_jobs(fig, first_job_dict, second_job_dict):
-    ## retrieve tick text and tick vals
-    job_yaxis_mapping = dict(zip(fig.layout.yaxis.ticktext,fig.layout.yaxis.tickvals))
-    jobs_delta = second_job_dict['Start'] - first_job_dict['Finish']
-    ## horizontal line segment
-    fig.add_shape(
-        x0=first_job_dict['Finish'], y0=job_yaxis_mapping[first_job_dict['Task']],
-        x1=first_job_dict['Finish'] + jobs_delta/2, y1=job_yaxis_mapping[first_job_dict['Task']],
-        line=dict(color="blue", width=2)
-    )
-    ## vertical line segment
-    fig.add_shape(
-        x0=first_job_dict['Finish'] + jobs_delta/2, y0=job_yaxis_mapping[first_job_dict['Task']],
-        x1=first_job_dict['Finish'] + jobs_delta/2, y1=job_yaxis_mapping[second_job_dict['Task']],
-        line=dict(color="blue", width=2)
-    )
-    ## horizontal line segment
-    fig.add_shape(
-        x0=first_job_dict['Finish'] + jobs_delta/2, y0=job_yaxis_mapping[second_job_dict['Task']],
-        x1=second_job_dict['Start'], y1=job_yaxis_mapping[second_job_dict['Task']],
-        line=dict(color="blue", width=2)
-    )
-    ## draw an arrow
-    fig.add_annotation(
-        x=second_job_dict['Start'], y=job_yaxis_mapping[second_job_dict['Task']],
-        xref="x",yref="y",
-        showarrow=True,
-        ax=-10,
-        ay=0,
-        arrowwidth=2,
-        arrowcolor="blue",
-        arrowhead=2,
-    )
-    return fig
+from src.logic.Create import create_table, create_activities
 
 def formatuj_czas_na_date(czas):
     delta_czasu = timedelta(hours=czas)
@@ -48,28 +15,58 @@ def formatuj_czas_na_date(czas):
 
     return sformatowany_czas
 
-class Zadanie:
-    def __init__(self,nazwa, czas, rezerwa, zadania_poprzedzające):
-        self.nazwa = nazwa
-        self.czas = czas
-        self.rezerwa = rezerwa
-        self.zadania_poprzedzające = np.array(zadania_poprzedzające)
-
-    def printcp(self):
-        str = "["
-        for i in self.zadania_poprzedzające:
-            str += i.nazwa+", "
-        str+="]"
-        return str
-
 def Gantt(activities):
     table = create_table(activities)
+    val = [x for x in activities.values()]
+    cp = []
+    for i in val:
+        pom = []
+        for j in i:
+            pom.append(j[0])
+        cp.append(pom)
+    # act = pd.DataFrame({"Czynność":activities.keys(),"cp":cp})
+    # print(act)
+    table["Dependency"] = cp
+    print(table)
     tw = pd.DataFrame({"Task":table["Czynność"],"Start":[formatuj_czas_na_date(i) for i in table["ES"]],"Finish":[formatuj_czas_na_date(i) for i in table["EF"]]})
 
     fig = ex.timeline(tw, x_start="Start", x_end="Finish", y="Task", color="Task", template="plotly_dark")
     fig.update_layout(paper_bgcolor='rgba(1,1,1,0.5)')
-    fig.update_yaxes(autorange="reversed")
+    fig.update_yaxes(autorange="reversed", automargin=True)
     fig.update_xaxes(visible=False)
+
+    for i, row in table.iterrows():
+        dependencies = row['Dependency']
+        if dependencies[0] != "-":
+            for dependency in dependencies:
+                dr = table[table["Czynność"] == dependency].iloc[0]
+
+                fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(dr['EF']), formatuj_czas_na_date(row['ES'])],
+                                         y=[dr["Czynność"],  dr['Czynność']],
+                                         mode="lines",
+                                         line=dict(color="red", width=3),
+                                         showlegend=False,
+                                         hoverinfo='none'))
+                fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(row['ES']), formatuj_czas_na_date(row['ES'])],
+                                         y=[dr["Czynność"],  row['Czynność']],
+                                         mode="lines",
+                                         line=dict(color="red", width=3),
+                                         showlegend=False,
+                                         hoverinfo='none'))
+                fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(row["ES"])],
+                                         y=[row["Czynność"]],
+                                         mode="markers",
+                                         marker=dict(color="red", size=10),
+                                         showlegend=False,
+                                         hoverinfo='text',
+                                         text=', '.join(dependencies) + f' -> {row["Czynność"]}'))
+                fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(dr["EF"])],
+                                         y=[dr["Czynność"]],
+                                         mode="markers",
+                                         marker=dict(color="red", size=10, symbol="diamond"),
+                                         showlegend=False,
+                                         hoverinfo='none'))
+
     # fig.show()
     # print(tw)
     # print(table)

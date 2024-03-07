@@ -726,7 +726,8 @@ const handleCellClick = function(event) {
                     }
                     const row = target.parentElement;
                     const column1Value = row.cells[1].textContent;
-                    if (newValue === column1Value) {
+
+                    if (newValueChars.some(char => char === column1Value)) {
                         alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
                         return;
                     }

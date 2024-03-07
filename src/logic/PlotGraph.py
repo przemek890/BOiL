@@ -36,3 +36,4 @@ def Gplot(activities, events, table):
     plt.savefig(csv_file_path + "graph.pdf")
     plt.show()
 
+

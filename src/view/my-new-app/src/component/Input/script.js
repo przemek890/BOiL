@@ -314,12 +314,14 @@ const saveToServer = function (csvData, tableName) {
             graph = buildGraphFromTable1();
             if(!isWeaklyConnected1(graph)) {
                 alert("Graf niespójny w sensie słabym");
+                return;
             }
         }
     if (tableName === 'Numeracja_zdarzen') {
         graph = buildGraphFromTable2();
             if(!checkGraphConnectivity(graph)) {
                 alert("Graf niespójny w sensie słabym");
+                return;
             }
         }
 

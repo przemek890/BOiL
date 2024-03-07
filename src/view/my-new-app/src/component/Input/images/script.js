@@ -166,7 +166,6 @@ generate_btn.onclick = () => {
     saveToServer(csvData, 'Czynnosc_poprzedzajaca');
 }
 
-// Budowanie grafu na podstawie tabeli: tableBody1
 function buildGraphFromTable1() {
     const graph = {};
     const rows = Array.from(document.querySelectorAll('#tableBody1 tr'));
@@ -183,7 +182,47 @@ function buildGraphFromTable1() {
     return graph;
 }
 
-// Sprawdzenie spojnosci slabej grafu
+function isWeaklyConnected2() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody2 tr'));
+
+    // Budowanie grafu
+    rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td'));
+        const edge = cells[0].innerText;
+        const predecessor = cells[1].innerText;
+        const successor = cells[2].innerText;
+
+        if (!graph[predecessor]) {
+            graph[predecessor] = [];
+        }
+        if (!graph[successor]) {
+            graph[successor] = [];
+        }
+
+        graph[predecessor].push({edge, node: successor});
+        graph[successor].push({edge, node: predecessor}); // dla grafu nieskierowanego
+    });
+
+    // Sprawdzanie spójności grafu
+    const visited = {};
+    const dfs = node => {
+        visited[node] = true;
+        graph[node].forEach(edge => {
+            if (!visited[edge.node]) {
+                dfs(edge.node);
+            }
+        });
+    };
+
+    dfs(Object.keys(graph)[0]);
+
+    const isConnected = Object.keys(graph).every(node => visited[node]);
+
+    return isConnected;
+}
+
+
 function isWeaklyConnected1(graph) {
     let undirectedGraph = convertToUndirected(graph);
     let visited = {};
@@ -192,7 +231,6 @@ function isWeaklyConnected1(graph) {
     return Object.keys(undirectedGraph).length === Object.keys(visited).length;
 }
 
-// Konwersja na graf nieskierowany
 function convertToUndirected(graph) {
     let undirectedGraph = {...graph};
 
@@ -208,7 +246,6 @@ function convertToUndirected(graph) {
     return undirectedGraph;
 }
 
-// Przeszukanie grafu w glab
 function dfs(graph, node, visited) {
     visited[node] = true;
 
@@ -218,10 +255,57 @@ function dfs(graph, node, visited) {
         }
     }
 }
+
+function buildGraphFromTable2() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody2 tr'));
+    rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td'));
+        const edge = cells[1].innerText;
+        const node1 = cells[2].innerText;
+        const node2 = cells[3].innerText;
+
+        if (!graph[node1]) {
+            graph[node1] = [];
+        }
+        if (!graph[node2]) {
+            graph[node2] = [];
+        }
+        graph[node1].push({edge, node: node2});
+        graph[node2].push({edge, node: node1});
+    });
+
+    return graph;
+}
+
+function checkGraphConnectivity(graph) {
+    const visited = new Set();
+    const stack = [Object.keys(graph)[0]];
+
+    while (stack.length > 0) {
+        const node = stack.pop();
+        if (!visited.has(node)) {
+            visited.add(node);
+            const edges = graph[node];
+            if (edges) {
+                edges.forEach(edge => stack.push(edge.node));
+            }
+        }
+    }
+    console.log(graph)
+    return Object.keys(graph).length === visited.size;
+}
+
+
+
 const saveToServer = function (csvData, tableName) {
     for (let row of csvData.split('\n')) {
         let columns = row.split(',');
         if ((columns[1] === "-" || columns[3] === "-") && tableName === 'Czynnosc_poprzedzajaca') {
+            alert("Błedne/Niekompletne dane");
+            return;
+        }
+        if ((columns[1] === "-" || columns[2] === "-" || columns[3] === "-") && tableName === 'Numeracja_zdarzen') {
             alert("Błedne/Niekompletne dane");
             return;
         }
@@ -233,6 +317,14 @@ const saveToServer = function (csvData, tableName) {
                 return;
             }
         }
+    if (tableName === 'Numeracja_zdarzen') {
+        graph = buildGraphFromTable2();
+            if(!checkGraphConnectivity(graph)) {
+                alert("Graf niespójny w sensie słabym");
+                return;
+            }
+        }
+
     fetch('http://localhost:5000/save_table_to_csv/' + tableName, {
         method: 'POST',
         headers: {
@@ -297,6 +389,222 @@ const downloadFile = function (data, fileType, fileName = '') {
     a.click();
     a.remove();
 }
+
+
+
+//---------------
+const search2 = document.querySelector('#right_table .input-group input'),
+    table_rows2 = document.querySelectorAll('#right_table tbody tr'),
+    table_headings2 = document.querySelectorAll('#right_table thead th');
+
+// 1. Searching for specific data of HTML table
+search2.addEventListener('input', searchTable2);
+
+function searchTable2() {
+    const table_rows2 = document.querySelectorAll('#right_table tbody tr');
+
+    table_rows2.forEach((row, i) => {
+        let table_data = row.textContent.toLowerCase(),
+            search_data = search2.value.toLowerCase();
+
+        row.classList.toggle('hide', table_data.indexOf(search_data) < 0);
+        row.style.setProperty('--delay', i / 25 + 's');
+    });
+
+    document.querySelectorAll('#right_table tbody tr:not(.hide)').forEach((visible_row, i) => {
+        visible_row.style.backgroundColor = (i % 2 == 0) ? 'transparent' : '#0000000b';
+    });
+}
+
+
+// 2. Sorting | Ordering data of HTML table
+table_headings2.forEach((head, i) => {
+    let sort_asc = true;
+    head.onclick = () => {
+        table_headings2.forEach(head => head.classList.remove('active'));
+        head.classList.add('active');
+
+        document.querySelectorAll('#right_table td').forEach(td => td.classList.remove('active'));
+        // Pobieramy wiersze tabeli za każdym razem, gdy funkcja jest wywoływana
+        const table_rows2 = document.querySelectorAll('#right_table tbody tr');
+        table_rows2.forEach(row => {
+            row.querySelectorAll('td')[i].classList.add('active');
+        });
+
+        head.classList.toggle('asc', sort_asc);
+        sort_asc = head.classList.contains('asc') ? false : true;
+
+        sortTable2(i, sort_asc, table_rows2);
+    };
+});
+
+function sortTable2(column, sort_asc, table_rows2) {
+    [...table_rows2].sort((a, b) => {
+        let first_row = a.querySelectorAll('td')[column].textContent.toLowerCase(),
+            second_row = b.querySelectorAll('td')[column].textContent.toLowerCase();
+
+        return sort_asc ? (first_row < second_row ? 1 : -1) : (first_row < second_row ? -1 : 1);
+    })
+        .map(sorted_row => document.querySelector('#right_table tbody').appendChild(sorted_row));
+}
+// Dla drugiej tabeli (right_table)
+
+// Funkcja eksportu do PDF dla drugiej tabeli
+const pdf_btn_2 = document.querySelector('#toPDF1');
+pdf_btn_2.onclick = () => {
+    toPDF_2('#right_table');
+};
+
+// Funkcja eksportu do JSON dla drugiej tabeli
+const json_btn_2 = document.querySelector('#toJSON1');
+json_btn_2.onclick = () => {
+    const json = toJSON_2('#right_table');
+    downloadFile_2(json, 'json');
+};
+
+// Funkcja eksportu do CSV dla drugiej tabeli
+const csv_btn_2 = document.querySelector('#toCSV1');
+csv_btn_2.onclick = () => {
+    const csv = toCSV_2('#right_table');
+    downloadFile_2(csv, 'csv', 'right_table_data');
+};
+
+generate1_btn.onclick = () => {
+    const csvData = toCSV_2('#right_table');
+    saveToServer(csvData, 'Numeracja_zdarzen');
+}
+
+
+// Funkcja eksportu do EXCEL dla drugiej tabeli
+const excel_btn_2 = document.querySelector('#toEXCEL1');
+excel_btn_2.onclick = () => {
+    const excel = toExcel_2('#right_table');
+    downloadFile_2(excel, 'excel', 'right_table_data');
+};
+
+// Functions for first table (customers_table) can be similarly defined
+
+
+// Funkcja eksportu do PDF dla drugiej tabeli
+const toPDF_2 = function (tableId) {
+    const table = document.querySelector(tableId);
+    const html_code = `
+    <!DOCTYPE html>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <main class="table" id="right_table">${table.innerHTML}</main>`;
+
+    const new_window = window.open();
+    new_window.document.write(html_code);
+
+    setTimeout(() => {
+        new_window.print();
+        new_window.close();
+    }, 400);
+};
+
+// Funkcja eksportu do JSON dla drugiej tabeli
+const toJSON_2 = function (tableId) {
+    const table = document.querySelector(tableId);
+    let table_data = [],
+        t_head = [],
+
+        t_headings = table.querySelectorAll('th'),
+        t_rows = table.querySelectorAll('tbody tr');
+
+    for (let t_heading of t_headings) {
+        let actual_head = t_heading.textContent.trim().split(' ');
+
+        t_head.push(actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase());
+    }
+
+    t_rows.forEach(row => {
+        const row_object = {},
+            t_cells = row.querySelectorAll('td');
+
+        t_cells.forEach((t_cell, cell_index) => {
+            const img = t_cell.querySelector('img');
+            if (img) {
+                row_object['customer image'] = decodeURIComponent(img.src);
+            }
+            row_object[t_head[cell_index]] = t_cell.textContent.trim();
+        });
+        table_data.push(row_object);
+    });
+
+    return JSON.stringify(table_data, null, 4);
+};
+
+// Funkcja eksportu do CSV dla drugiej tabeli
+const toCSV_2 = function (tableId) {
+    const table = document.querySelector(tableId);
+    const t_heads = table.querySelectorAll('th');
+    const tbody_rows = table.querySelectorAll('tbody tr');
+
+    const headings = [...t_heads].map(head => {
+        let actual_head = head.textContent.trim().split(' ');
+        return actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase();
+    }).join(',');
+
+    const table_data = [...tbody_rows].map(row => {
+        const cells = row.querySelectorAll('td'),
+            data_without_img = [...cells].map(cell => {
+                // Sprawdzenie, czy komórka zawiera obraz
+                const img = cell.querySelector('img');
+                if (img) {
+                    return '';
+                }
+                return cell.textContent.replace(/,/g, ".").trim();
+            }).join(',');
+
+        return data_without_img;
+    }).join('\n');
+
+    return headings + '\n' + table_data;
+};
+
+// Funkcja eksportu do EXCEL dla drugiej tabeli
+const toExcel_2 = function (tableId) {
+    const table = document.querySelector(tableId);
+    const t_heads = table.querySelectorAll('th');
+    const tbody_rows = table.querySelectorAll('tbody tr');
+
+    const headings = [...t_heads].map(head => {
+        let actual_head = head.textContent.trim().split(' ');
+        return actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase();
+    }).join('\t');
+
+    const table_data = [...tbody_rows].map(row => {
+        const cells = row.querySelectorAll('td'),
+            data_without_img = [...cells].map(cell => {
+                // Sprawdzenie, czy komórka zawiera obraz
+                const img = cell.querySelector('img');
+                if (img) {
+                    return '';
+                }
+                return cell.textContent.trim();
+            }).join('\t');
+
+        return data_without_img;
+    }).join('\n');
+
+    return headings + '\n' + table_data;
+};
+
+const downloadFile_2 = function (data, fileType, fileName = '') {
+    const a = document.createElement('a');
+    a.download = fileName;
+    const mime_types = {
+        'json': 'application/json',
+        'csv': 'text/csv',
+        'excel': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    }
+    a.href = `
+        data:${mime_types[fileType]};charset=utf-8,${encodeURIComponent(data)}
+    `;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+};
 
 
 //-----------------------------------------------------------------edycja tabeli-------------------------------------------
@@ -439,6 +747,37 @@ const handleCellClick = function(event) {
                                 alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
                                 return;
                             }
+
+                }
+                else if (tableId === 'tableBody2') {
+                    if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody2 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+
+                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) <= 0)) {
+                        alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
+                        return;
+                    }
+                    const row = target.parentElement;
+                    const column2Value = row.cells[2].textContent;
+                    const column3Value = row.cells[3].textContent;
+
+                    if (columnIndex === 2 && column3Value !== "-" && parseInt(newValue) >= parseInt(column3Value)) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+                    if (columnIndex === 3 && parseInt(newValue) <= parseInt(column2Value)) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
                 }
                 target.textContent = newValue;
             }
@@ -453,6 +792,12 @@ const handleCellClick = function(event) {
 // Dodanie obsługi zdarzeń do wszystkich komórek tabeli customers_table
 const tableCells1 = document.querySelectorAll('#customers_table tbody td');
 tableCells1.forEach(cell => {
+    cell.addEventListener('click', handleCellClick);
+});
+
+// Dodanie obsługi zdarzeń do wszystkich komórek tabeli
+const tableCells = document.querySelectorAll('#right_table tbody td');
+tableCells.forEach(cell => {
     cell.addEventListener('click', handleCellClick);
 });
 
@@ -489,5 +834,8 @@ document.getElementById('addRowButton_customers').addEventListener('click', () =
     addRow('customers_table');
 });
 
+document.getElementById('addRowButton_right').addEventListener('click', () => {
+    addRow('right_table');
+});
 
 //-----------------------------------------------------------

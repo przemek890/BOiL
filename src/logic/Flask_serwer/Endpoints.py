@@ -65,8 +65,8 @@ def get_Graph():
 @app.route('/get_Graph', methods=['GET'])
 def get_Graphv2():
     current_script_path = os.path.dirname(os.path.abspath(__file__))
-    csv_file_path = os.path.join(current_script_path, "../../../Data/csv", "Czynnosc_poprzedzajaca.csv")
-    activities = create_activities(csv_file_path)
+    csv_file_path = os.path.join(current_script_path, "../../../Data/csv", "Numeracja_zdarzen.csv")
+    activities = create_events(csv_file_path)
     graph = Graph(activities)
     return graph
 

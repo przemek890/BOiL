@@ -3,33 +3,42 @@ import plotly.graph_objects as go
 from src.logic.Create import create_table
 import pandas as pd
 
+
 def Graph(activities):
     #wczytywanie danych
-    ky =[]
-    for a, b in activities.items():
-        ky.append(a)
+    print(activities)
 
     val = [x for x in activities.values()]
-    cp = []
+    vaX = []
+    vaY = []
     for i in val:
         pom = []
+        pom2= []
         for j in i:
             pom.append(j[0])
-        cp.append(pom)
-
-    da = pd.DataFrame({"Task": ky,"PreTask": cp})
+            pom2.append(j[1])
+        vaX.append(pom[0])
+        vaY.append(pom2[0])
+    print(vaX)
+    print(vaY)
+    da = pd.DataFrame({"PreviousNode": vaX,"NextNode": vaY})
     print(da)
 
-
     G = nx.Graph()
-    G.add_edge(1, 2) #A
-    G.add_edge(1, 3) #B
-    G.add_edge(2, 4) #C
-    G.add_edge(2, 5) #D
-    G.add_edge(3, 5) #E
-    G.add_edge(4, 5) #F
-    G.add_edge(4, 6) #G
-    G.add_edge(5, 6) #H
+    for a,b in da.iterrows():
+        G.add_edge(int(b['PreviousNode']), int(b['NextNode']))
+        # print(b['PreviousNode'], b['NextNode'])
+
+
+
+    # G.add_edge(1, 2) #A
+    # G.add_edge(1, 3) #B
+    # G.add_edge(2, 4) #C
+    # G.add_edge(2, 5) #D
+    # G.add_edge(3, 5) #E
+    # G.add_edge(4, 5) #F
+    # G.add_edge(4, 6) #G
+    # G.add_edge(5, 6) #H
 
     #
     pos = nx.spring_layout(G)
@@ -83,18 +92,7 @@ def Graph(activities):
                         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
                     )
 
-    # pom = []
-    # pom2=[]
-    # for indeks, wiersz in da.iterrows():
-    #     pom.append(indeks+1)
-    #     # print(wiersz[1])
-    #     if(wiersz[1][0]!='-'):
-    #         pom2.append(ord(wiersz[1][0])-64)
-    #     else
-    #
-    #
-    # print(pom)
-    # print(pom2)
+
 
     # fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(row["ES"])],
     #                                          y=[row["Czynność"]],
@@ -105,16 +103,22 @@ def Graph(activities):
     #                                          text=', '.join(dependencies) + f' -> {row["Czynność"]}'))
 
     return fig.to_json()
-    # G = nx.Graph()
-    # G.add_edge(1, 2)
-    # G.add_edge(2, 3)
-    #
-    # pos = nx.spring_layout(G)  # Ustawienie pozycji węzłów
-    # check = nx.draw(G, pos, with_labels=True, node_size=700, node_color="skyblue", font_size=10, font_color="black", font_weight="bold", edge_color="gray")
-    # plt.show()
-    #
-    #
-    # return check.to_json()
-    # return graph_data
-  # graph_data = {"nodes": [{"id": str(node)} for node in G.nodes()],
-    #                "edges": [{"from": str(edge[0]), "to": str(edge[1])} for edge in G.edges()]}
+ #if '-' to (1,x), gdzie x = 2 na początku
+    # pomX = []
+    # pomx1=2
+    # pomY=[]
+    # pomy1=2
+    # for indeks, wiersz in da.iterrows():
+    #     if(wiersz[1][0]=='-'):
+    #         pomX.append(1)
+    #         pomY.append(pomy1)
+    #         pomy1+=1
+    #     elif(wiersz[1][0]>='A' or wiersz[1][0]<='Z'):
+    #         pomX.append(pomx1)
+    #         pomx1+=1
+    #     pom.append(indeks+1)
+        # if(wiersz[1][0]!='-'):
+        #     pom2.append(ord(wiersz[1][0])-64)
+        # else
+    # print(pomX)
+    # print(pom2)

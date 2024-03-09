@@ -4,10 +4,31 @@ from src.logic.Create import create_table
 import pandas as pd
 
 
-def Graph(activities):
+def Graph(activities, table): #events, table
     #wczytywanie danych
-    print(activities)
 
+    #table
+    # print(table) #dataframe
+    df_sel = table[["Czynność", "ES", "EF", "Rezerwa", "Czynność krytyczna"]]
+    # print(df_sel)
+    tab_str = []
+    for ind, ro in df_sel.iterrows():
+        tab_str.append(f"Nazwa: {ro['Czynność']}\nES: {ro['ES']}\tEF: {ro['EF']}\nRezerwa: {ro['Rezerwa']}")
+
+    #ścieżka krytyczna
+    critical = []
+    for index, row in df_sel.iterrows():
+        if(row['Czynność krytyczna']=="tak"):
+            # print(True)
+            critical.append(True)
+        else:
+            # print(False)
+            critical.append(False)
+
+    print(critical)
+
+
+    #events
     val = [x for x in activities.values()]
     vaX = []
     vaY = []
@@ -19,46 +40,70 @@ def Graph(activities):
             pom2.append(j[1])
         vaX.append(pom[0])
         vaY.append(pom2[0])
-    print(vaX)
-    print(vaY)
-    da = pd.DataFrame({"PreviousNode": vaX,"NextNode": vaY})
-    print(da)
 
-    G = nx.Graph()
+    da = pd.DataFrame({"PreviousNode": vaX,"NextNode": vaY})
+
+    # generowanie ścieżek
+    G = nx.DiGraph()
     for a,b in da.iterrows():
         G.add_edge(int(b['PreviousNode']), int(b['NextNode']))
-        # print(b['PreviousNode'], b['NextNode'])
 
-
-
-    # G.add_edge(1, 2) #A
-    # G.add_edge(1, 3) #B
-    # G.add_edge(2, 4) #C
-    # G.add_edge(2, 5) #D
-    # G.add_edge(3, 5) #E
-    # G.add_edge(4, 5) #F
-    # G.add_edge(4, 6) #G
-    # G.add_edge(5, 6) #H
 
     #
     pos = nx.spring_layout(G)
 
+
     edge_x = []
     edge_y = []
 
-    for edge in G.edges():
-        x0, y0 = pos[edge[0]]
-        x1, y1 = pos[edge[1]]
-        edge_x += [x0, x1, None]
-        edge_y += [y0, y1, None]
+    xtext = []
+    ytext = []
 
-    #
-    edge_trace = go.Scatter(
-        x=edge_x, y=edge_y,
-        line=dict(width=0.5, color='#888'),
-        hoverinfo='none',
-        mode='lines')
+    edge_trace1 = go.Scatter( x=[], y=[], mode='lines+text',
+            line=dict(width=2), hoverinfo='none',
+        )
 
+    edge_trace2 = go.Scatter( x=[], y=[], mode='lines+text',
+            line=dict(width=2), hoverinfo='none',
+        )
+
+    for i, edge in enumerate(G.edges().data()):
+            x0, y0 = pos[edge[0]]
+            x1, y1 = pos[edge[1]]
+
+            if critical[i]:
+                edge_trace1['x'] += tuple([x0,x1,None])
+                edge_trace1['y'] += tuple([y0,y1,None])
+                xtext.append((x0 + x1) / 2)
+                ytext.append((y0 + y1) / 2)
+
+            else:
+                edge_trace2['x'] += tuple([x0,x1,None])
+                edge_trace2['y'] += tuple([y0,y1,None])
+                xtext.append((x0 + x1) / 2)
+                ytext.append((y0 + y1) / 2)
+
+
+    edge_trace1['marker'] = dict(
+            color='rgb(255,0,0)',
+        )
+
+    edge_trace2['marker'] = dict(
+            color='rgb(255,255,255)',
+        )
+
+    edge_trace = [edge_trace1, edge_trace2]
+
+    #teskt do ścieżek
+    eweights_trace = go.Scatter(x=xtext, y=ytext, mode='text',
+                marker_size = 0.5,
+                # text=[0.45, 0.7, 0.34],
+                textposition='top center',
+                hovertemplate=tab_str )
+
+
+
+    #generowanie węzłów
     node_x = []
     node_y = []
 
@@ -81,9 +126,9 @@ def Graph(activities):
             size=40,
         )
     )
+    data = edge_trace + [eweights_trace] + [node_trace]
 
-
-    fig = go.Figure(data=[edge_trace, node_trace],
+    fig = go.Figure(data=data,
                     layout=go.Layout(
                         showlegend=False,
                         hovermode='closest',
@@ -93,33 +138,23 @@ def Graph(activities):
                         template="plotly_dark")
                     )
 
-
-
-    # fig.add_trace(go.Scatter(x=[formatuj_czas_na_date(row["ES"])],
-    #                                          y=[row["Czynność"]],
-    #                                          mode="markers",
-    #                                          marker=dict(color="red", size=10),
-    #                                          showlegend=False,
-    #                                          hoverinfo='text',
-    #                                          text=', '.join(dependencies) + f' -> {row["Czynność"]}'))
+    # for edge in G.edges():
+    #     x0, y0 = pos[edge[0]]
+    #     x1, y1 = pos[edge[1]]
+    #     fig.add_annotation(
+    #         ax=x0,
+    #         ay=y0,
+    #         axref='x',
+    #         ayref='y',
+    #         x=x1,
+    #         y=y1,
+    #         xref='x',
+    #         yref='y',
+    #         showarrow=True,
+    #         arrowhead=2,
+    #         arrowsize=1,
+    #         arrowwidth=2,
+    #         arrowcolor='grey'
+    #     )
 
     return fig.to_json()
- #if '-' to (1,x), gdzie x = 2 na początku
-    # pomX = []
-    # pomx1=2
-    # pomY=[]
-    # pomy1=2
-    # for indeks, wiersz in da.iterrows():
-    #     if(wiersz[1][0]=='-'):
-    #         pomX.append(1)
-    #         pomY.append(pomy1)
-    #         pomy1+=1
-    #     elif(wiersz[1][0]>='A' or wiersz[1][0]<='Z'):
-    #         pomX.append(pomx1)
-    #         pomx1+=1
-    #     pom.append(indeks+1)
-        # if(wiersz[1][0]!='-'):
-        #     pom2.append(ord(wiersz[1][0])-64)
-        # else
-    # print(pomX)
-    # print(pom2)

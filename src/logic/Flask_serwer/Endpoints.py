@@ -2,6 +2,7 @@ import os
 from flask import Flask,jsonify,send_file
 from src.logic.Create import create_activities, create_table, create_events
 from src.logic.Gantt import Gantt
+from src.logic.Graph import Graph
 from flask import send_file
 from src.logic.PlotGraph import Gplot
 from flask_cors import CORS
@@ -64,6 +65,20 @@ def get_Graph():
     events = create_events(csv_file_path_2)
     Gplot(activities, events, table)
     return send_file(current_script_path_2 + "/../../../Data/graph.pdf", as_attachment=True)
+
+@app.route('/get_Graph', methods=['GET'])
+def get_Graphv2():
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    csv_file_path = os.path.join(current_script_path, "../../../Data/csv", "Numeracja_zdarzen.csv")
+    events = create_events(csv_file_path)
+
+    current_script_path_1 = os.path.dirname(os.path.abspath(__file__))
+    csv_file_path_1 = os.path.join(current_script_path_1, "../../../Data/csv", "Czynnosc_poprzedzajaca.csv")
+    activities = create_activities(csv_file_path_1)
+    table = create_table(activities)
+
+    graph = Graph(events, table)
+    return graph
 
 @app.route('/get_html', methods=['GET'])
 def get_html():

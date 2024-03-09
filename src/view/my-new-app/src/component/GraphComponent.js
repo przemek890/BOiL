@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Typography } from '@mui/material';
 import Graph from "react-graph-vis";
 import Plot from "react-plotly.js";
+// import "./GT.css"
 
 const GraphComponent = () => {
     const [graphData, setGraphData] = useState({data: [], layout: {}});
@@ -37,6 +38,7 @@ const GraphComponent = () => {
                 data={graphData.data}
                 layout={graphData.layout}
                 style={{ width: '100%', height: '100%'}}
+                //config={{responsive: true}}
             />
             </Typography>
         </div>

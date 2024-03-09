@@ -9,12 +9,13 @@ def Graph(activities, table): #events, table
 
     #table
     # print(table) #dataframe
-    df_sel = table[["Czynność", "ES", "EF", "Rezerwa", "Czynność krytyczna"]]
+    df_sel = table[["Czynność", "ES", "EF", "Rezerwa", "Czynność krytyczna","t"]]
     # print(df_sel)
     tab_str = []
+    tab_name = []
     for ind, ro in df_sel.iterrows():
         tab_str.append(f"Nazwa: {ro['Czynność']}\nES: {ro['ES']}\tEF: {ro['EF']}\nRezerwa: {ro['Rezerwa']}")
-
+        tab_name.append(f"{ro['Czynność']} {ro['t']}")
     #ścieżka krytyczna
     critical = []
     for index, row in df_sel.iterrows():
@@ -89,7 +90,7 @@ def Graph(activities, table): #events, table
         )
 
     edge_trace2['marker'] = dict(
-            color='rgb(255,255,255)',
+            color='rgb(196, 153, 110)',
         )
 
     edge_trace = [edge_trace1, edge_trace2]
@@ -97,8 +98,9 @@ def Graph(activities, table): #events, table
     #teskt do ścieżek
     eweights_trace = go.Scatter(x=xtext, y=ytext, mode='text',
                 marker_size = 0.5,
-                # text=[0.45, 0.7, 0.34],
+                text=tab_name,
                 textposition='top center',
+                textfont=dict(color = 'rgb(255,255,255)'),
                 hovertemplate=tab_str )
 
 

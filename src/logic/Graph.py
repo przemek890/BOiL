@@ -2,6 +2,7 @@ import networkx as nx
 import plotly.graph_objects as go
 from src.logic.Create import create_table
 import pandas as pd
+import scipy
 
 
 def Graph(activities, table): #events, table
@@ -51,7 +52,8 @@ def Graph(activities, table): #events, table
 
 
     #
-    pos = nx.spring_layout(G)
+    # pos = nx.spring_layout(G)
+    pos = nx.shell_layout(G)
 
 
     edge_x = []
@@ -61,11 +63,11 @@ def Graph(activities, table): #events, table
     ytext = []
 
     edge_trace1 = go.Scatter( x=[], y=[], mode='lines+text',
-            line=dict(width=2), hoverinfo='none',
+            line=dict(width=3), hoverinfo='none',
         )
 
     edge_trace2 = go.Scatter( x=[], y=[], mode='lines+text',
-            line=dict(width=2), hoverinfo='none',
+            line=dict(width=3), hoverinfo='none',
         )
 
     for i, edge in enumerate(G.edges().data()):
@@ -140,23 +142,21 @@ def Graph(activities, table): #events, table
                         template="plotly_dark")
                     )
 
-    # for edge in G.edges():
-    #     x0, y0 = pos[edge[0]]
-    #     x1, y1 = pos[edge[1]]
-    #     fig.add_annotation(
-    #         ax=x0,
-    #         ay=y0,
-    #         axref='x',
-    #         ayref='y',
-    #         x=x1,
-    #         y=y1,
-    #         xref='x',
-    #         yref='y',
-    #         showarrow=True,
-    #         arrowhead=2,
-    #         arrowsize=1,
-    #         arrowwidth=2,
-    #         arrowcolor='grey'
-    #     )
+    for edge in G.edges():
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        fig.add_annotation(
+            ax=x0, ay=y0, axref='x', ayref='y',
+            x=x1, y=y1, xref='x', yref='y',
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=25,
+            arrowwidth=0.1,
+            arrowcolor='#8a805d',
+            startstandoff=15,
+            standoff=18
+        )
+
+
 
     return fig.to_json()

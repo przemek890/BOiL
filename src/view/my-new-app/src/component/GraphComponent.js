@@ -28,17 +28,14 @@ const GraphComponent = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '75vh', width: '75vw' }}>
             <br/>
-            <Typography variant="h4" component="div" gutterBottom align="center" style={{ color: 'white', fontWeight: 'bold' }}>
-                {/*<Graph*/}
-                {/*    graph={graphData}*/}
-                {/*    options={options}*/}
-                {/*/>*/}
+            <Typography variant="h4" component="div" gutterBottom align="center"  style={{ color: 'white', fontWeight: 'bold' }}>
+                GRAPH
                 <Plot
                 className="plot"
                 data={graphData.data}
                 layout={graphData.layout}
-                style={{ width: '100%', height: '100%'}}
-                //config={{responsive: true}}
+                style={{ width: '1000px', height: '500px'}}
+                // config={{responsive: true}}
             />
             </Typography>
         </div>

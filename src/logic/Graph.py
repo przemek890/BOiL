@@ -142,7 +142,14 @@ def Graph(activities, table): #events, table
                         template="plotly_dark")
                     )
 
+    #strzałki
+    # print(critical)
+    ipom=0
     for edge in G.edges():
+        if(critical[ipom]==True):
+            col = 'rgb(255,0,0)'
+        else:
+            col = 'rgb(196, 153, 110)'
         x0, y0 = pos[edge[0]]
         x1, y1 = pos[edge[1]]
         fig.add_annotation(
@@ -152,10 +159,11 @@ def Graph(activities, table): #events, table
             arrowhead=2,
             arrowsize=25,
             arrowwidth=0.1,
-            arrowcolor='#8a805d',
+            arrowcolor=col,
             startstandoff=15,
             standoff=18
         )
+        ipom += 1
 
 
 

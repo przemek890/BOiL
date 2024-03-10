@@ -4,6 +4,33 @@ from src.logic.Create import create_table
 import pandas as pd
 import scipy
 
+# wykrywanie różnic w indeksach
+def comp_list(a_c, b, do_zmiany): #dodać nowy argument i  nim zmieniać kolejność
+    lista_zwrotow = []
+    a = a_c.copy()
+    if len(a) != len(b):
+        raise ValueError("Listy muszą mieć taką samą długość")
+
+    for i in range(len(a)):
+        if a[i][0] != b[i][0] or a[i][1] != b[i][1]:
+            for j in range(len(b)):
+                if a[i][0] == b[j][0] and a[i][1] == b[j][1]:
+                    a = change_order([(i, j)], a)
+                    do_zmiany=change_order([(i,j)],do_zmiany)
+                    lista_zwrotow.append([i, j])
+                    break
+
+    return do_zmiany
+
+#zmiana indeksami
+def change_order(order,x):
+    x_new=x.copy()
+    for i in range(len(order)):
+        x_new[order[i][1]], x_new[order[i][0]] = x_new[order[i][0]], x_new[order[i][1]]
+    # problem z boolem???
+
+
+    return x_new
 
 def Graph(activities, table): #events, table
     #wczytywanie danych
@@ -43,16 +70,30 @@ def Graph(activities, table): #events, table
         vaX.append(pom[0])
         vaY.append(pom2[0])
 
-    da = pd.DataFrame({"PreviousNode": vaX,"NextNode": vaY})
+    da = pd.DataFrame({"PreviousNode": vaX, "NextNode": vaY})
 
+    st = da.values.tolist()
     # generowanie ścieżek
     G = nx.DiGraph()
     for a,b in da.iterrows():
         G.add_edge(int(b['PreviousNode']), int(b['NextNode']))
+        # st.append((int(b["PreviousNode"]),int(b["NextNode"])))
+        print(f"{b['PreviousNode']} - {b['NextNode']}")
 
 
-    #
-    # pos = nx.spring_layout(G)
+    ### naprawa błędu biblioteki NetworkX, który zmieniał kolejność dodawancych grafów
+    edge_list_in_order = list(G.edges)  # w takiej kolejności sortowanie wszystkiego
+    # print(st)
+    # print(edge_list_in_order)
+
+    print(critical)
+    critical=comp_list( st, edge_list_in_order,critical)
+    tab_str = comp_list(st, edge_list_in_order, tab_str)
+    tab_name = comp_list(st, edge_list_in_order, tab_name)
+    print(critical)
+
+
+    # pos = nx.spring_layout(G) #zmiana generowania grafu przy każdym
     pos = nx.shell_layout(G)
 
 
@@ -62,9 +103,9 @@ def Graph(activities, table): #events, table
     xtext = []
     ytext = []
 
-    edge_trace1 = go.Scatter( x=[], y=[], mode='lines+text',
-            line=dict(width=3), hoverinfo='none',
-        )
+    edge_trace1 = go.Scatter(x=[], y=[], mode='lines+text',
+                             line=dict(width=3), hoverinfo='none',
+                             )
 
     edge_trace2 = go.Scatter( x=[], y=[], mode='lines+text',
             line=dict(width=3), hoverinfo='none',

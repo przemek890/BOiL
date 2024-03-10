@@ -742,11 +742,16 @@ const handleCellClick = function(event) {
                             return;
                         }
                     }
-                      const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
-                            if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
-                                alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
-                                return;
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                        for (const value of existingValues) {
+                            if (value !== "") {
+                                const graph = buildGraphFromTable();
+                                if (createsCycle(graph, value, newValue)) {
+                                    alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
+                                    return;
+                                }
                             }
+                        }
 
                 }
                 else if (tableId === 'tableBody2') {

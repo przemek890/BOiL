@@ -70,4 +70,3 @@ def create_table(activities):
             df = pd.concat([df, row], ignore_index=True)
     df = df.loc[df.groupby('Czynność')['ES'].idxmax()]
     return df
-

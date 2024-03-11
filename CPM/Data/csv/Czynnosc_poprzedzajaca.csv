@@ -1,0 +1,9 @@
+Czynnosc,Czynnosc_bezposrednio_poprzedzajaca,Czas_trwania
+A,-,2
+B,-,5
+C,AB,1
+D,B,6
+E,CD,4
+F,D,2
+P,B,0
+L,D,0

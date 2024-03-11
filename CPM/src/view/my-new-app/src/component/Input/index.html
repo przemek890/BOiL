@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Input proejkt Boil tabele do csv</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <main class="table" id="customers_table">
+        <section class="table__header">
+            <h3>Czynność poprzedzająca</h3>
+            <button id="addRow1">+</button>
+            <button id="removeRow1">-</button>
+            <div class="input-group">
+                <input type="search" placeholder="Search Data...">
+                <img src="http://localhost:5000/get_search_png" alt="">
+            </div>
+            <div class="export__file">
+                <label for="export-file" class="export__file-btn" title="Export File"></label>
+                <input type="checkbox" id="export-file">
+                <div class="export__file-options">
+                    <label>Export As &nbsp; &#10140;</label>
+                    <label for="export-file" id="toPDF">PDF <img src="http://localhost:5000/get_pdf_png" alt=""></label>
+                    <label for="export-file" id="toJSON">JSON <img src="http://localhost:5000/get_json_png" alt=""></label>
+                    <label for="export-file" id="toCSV">CSV <img src="http://localhost:5000/get_csv_png" alt=""></label>
+                    <label for="export-file" id="toEXCEL">EXCEL <img src="http://localhost:5000/get_excel_png" alt=""></label>
+                    <label for="export-file" id="GENERATE">FOR CPM <img src="http://localhost:5000/get_export_png" alt=""></label>
+                </div>
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Czynnosc<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Czynnosc_bezposrednio_poprzedzajaca<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Czas_trwania<span class="icon-arrow">&UpArrow;</span></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody1">
+                    <!-- Wiersze tabeli będą dodawane dynamicznie tutaj -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script>
+// Buduje graf na podstawie aktualnego stanu tabeli
+function buildGraphFromTable() {
+    const graph = {};
+    const rows = Array.from(document.querySelectorAll('#tableBody1 tr'));
+    for (const row of rows) {
+        const cells = row.children;
+        const node = cells[1].textContent;
+        const edges = cells[2].textContent;
+        if (edges === '-') {
+            graph[node] = []; // Jeśli dla danej czynności nie ma bezpośrednio poprzedzających czynności, przypisujemy pustą tablicę
+        } else {
+            graph[node] = edges.split(',');
+        }
+    }
+    return graph;
+}
+
+// Sprawdza, czy wprowadzona zmiana spowoduje cykl w grafie
+function createsCycle(graph, node, newValue) {
+    const visited = {};
+    const stack = {};
+
+    function isCyclic(v) {
+        if (!visited[v]) {
+            visited[v] = true;
+            stack[v] = true;
+            const neighbors = graph[v];
+            if (neighbors && Array.isArray(neighbors)) {
+                for (const neighbor of neighbors) {
+                    if (!visited[neighbor] && isCyclic(neighbor)) {
+                        return true;
+                    } else if (stack[neighbor]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        stack[v] = false;
+        return false;
+    }
+
+    // Sprawdź, czy nowa wartość nie jest już bezpośrednio poprzedzana przez węzeł, który próbujemy zmienić
+    for (const key in graph) {
+        if (graph[key].includes(node) && newValue.includes(key)) {
+            return true;
+        }
+    }
+
+    graph[node] = newValue.split(',');
+    for (const node in graph) {
+        if (isCyclic(node)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    let idCounter = 1; // Przenosimy licznik ID na zewnątrz funkcji DOMContentLoaded
+
+    // Funkcja obsługująca kliknięcie w komórkę tabeli
+    const handleCellClick = function(event) {
+        const target = event.target;
+        if (target.tagName === 'TD' && target.cellIndex !== 0) {
+            const currentValue = target.textContent.trim();
+            const input = document.createElement('input');
+            input.value = currentValue;
+            input.style.width = target.offsetWidth;
+            input.style.height = target.offsetHeight;
+            input.style.boxSizing = 'border-box';
+            input.style.padding = '5px';
+            input.style.margin = '0';
+            input.style.border = '1px solid #ccc';
+            input.style.borderRadius = '3px';
+            input.style.fontSize = 'inherit';
+            input.style.fontFamily = 'inherit';
+            input.style.textAlign = 'center';
+
+            // Po utworzeniu pola input, zastępujemy nim komórkę tabeli
+            target.innerHTML = '';
+            target.appendChild(input);
+
+            // Obsługa zdarzenia zatwierdzenia nowej wartości po wciśnięciu Enter
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    // Walidacja danych
+                    const tableId = target.parentElement.parentElement.id;
+                    const columnIndex = target.cellIndex;
+                    const newValue = input.value;
+
+
+                    if (!newValue) {
+                    alert('Nowa wartość nie może być pusta');
+                    return;
+                }
+
+                    if (tableId === 'tableBody1') {
+
+                     if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+
+                        if (columnIndex === 2) {
+                            const existingValues = Array.from(document.querySelectorAll('#tableBody1 tr td:nth-child(2)')).map(td => td.textContent);
+                            const newValueChars = Array.from(newValue);
+                            const uniqueChars = [...new Set(newValueChars)];
+                            if (newValueChars.length !== uniqueChars.length) {
+                                alert('Nie można wpisać dwóch takich samych liter. Każda litera musi być unikalna.');
+                                return;
+                            }
+                            if (!newValueChars.every(char => existingValues.includes(char) || char === '-')) {
+                                alert('Czynnoss_bezposrednio_poprzedzajaca musi być "-" lub dużą literą (ciągiem różnych liter), która już istnieje w kolumnie Czynnosc');
+                                return;
+                            }
+                            const row = target.parentElement;
+                            const column1Value = row.cells[1].textContent;
+                                if (newValueChars.some(char => char === column1Value)) {
+                                    alert('Dana Czynność nie może być samą swoją czynnością bezpośrednio poprzedzającą');
+                                    return;
+                                }
+                        }
+                            if (columnIndex === 3) {
+                                // Sprawdzamy, czy newValue jest liczbą
+                                if (isNaN(newValue)) {
+                                    alert('Wartości w kolumnie Czas_trwania muszą być liczbami');
+                                    return;
+                                }
+                                // Sprawdzamy, czy newValue jest liczbą naturalną większą lub równą 0
+                                if (!Number.isFinite(Number(newValue)) || parseFloat(newValue) < 0) {
+                                    alert('Wartości w kolumnie Czas_trwania muszą być liczbami naturalnymi >= 0');
+                                    return;
+                                }
+                            }
+                           const graph = buildGraphFromTable(); // Funkcja do zbudowania grafu na podstawie aktualnego stanu tabeli
+                            if (createsCycle(graph, target.parentElement.children[1].textContent, newValue)) {
+                                alert('Ta zmiana spowoduje powstanie cyklu w grafie. Proszę wprowadzić inną wartość.');
+                                return;
+                            }
+                    }
+
+                    target.textContent = newValue;
+                }
+            });
+
+            // Ustawienie fokusa na polu input po jego utworzeniu
+            input.focus();
+        }
+    };
+
+
+    fetch('http://localhost:5000/get_activities')
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.getElementById('tableBody1');
+            for (let key in data) {
+                let activities = data[key];
+                let activityString = activities.map(activity => activity[0]).join('');
+
+                let row = document.createElement('tr');
+                let cellID = document.createElement('td');
+                cellID.textContent = idCounter++;
+                row.appendChild(cellID);
+
+                let cellActivity = document.createElement('td');
+                cellActivity.textContent = key;
+                row.appendChild(cellActivity);
+
+                let cellPrevActivity = document.createElement('td');
+                cellPrevActivity.textContent = activityString;
+                row.appendChild(cellPrevActivity);
+
+                let cellDuration = document.createElement('td');
+                cellDuration.textContent = activities[0][1];
+                row.appendChild(cellDuration);
+
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+
+
+    document.getElementById('addRow1').addEventListener('click', function() {
+        let tableBody = document.getElementById('tableBody1');
+        let row = document.createElement('tr');
+
+        let cellID = document.createElement('td');
+        cellID.textContent = idCounter; // Używamy licznika jako ID dla nowego wiersza
+        row.appendChild(cellID);
+
+        for (let i = 0; i < 3; i++) {
+            let cell = document.createElement('td');
+            cell.textContent = '-'; // Wypełniamy puste pola "-"
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+        idCounter++; // Zwiększamy licznik ID po dodaniu nowego wiersza
+
+        // Dodajemy obsługę zdarzeń do nowo utworzonych komórek
+        let newCells = row.querySelectorAll('td');
+        newCells.forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
+    });
+
+    document.getElementById('removeRow1').addEventListener('click', function() {
+        let tableBody = document.getElementById('tableBody1');
+        if (tableBody.rows.length > 0) {
+            tableBody.deleteRow(tableBody.rows.length - 1);
+            idCounter--; // Zmniejszamy licznik ID po usunięciu wiersza
+        }
+    });
+});
+
+    </script>
+
+<main class="table" id="right_table">
+    <section class="table__header">
+        <h3>Numeracja zdarzeń</h3>
+        <button id="addRow2">+</button>
+        <button id="removeRow2">-</button>
+        <div class="input-group">
+            <input type="search" placeholder="Search Data...">
+            <img src="http://localhost:5000/get_search_png" alt="">
+        </div>
+        <div class="export__file">
+            <label for="export-file1" class="export__file-btn" title="Export File"></label>
+            <input type="checkbox" id="export-file1">
+            <div class="export__file-options">
+                <label>Export As   ➜</label>
+                <label for="export-file1" id="toPDF1">PDF <img src="http://localhost:5000/get_pdf_png" alt=""></label>
+                <label for="export-file1" id="toJSON1">JSON <img src="http://localhost:5000/get_json_png" alt=""></label>
+                <label for="export-file1" id="toCSV1">CSV <img src="http://localhost:5000/get_csv_png" alt=""></label>
+                <label for="export-file1" id="toEXCEL1">EXCEL <img src="http://localhost:5000/get_excel_png" alt=""></label>
+                <label for="export-file1" id="GENERATE1">FOR CPM <img src="http://localhost:5000/get_export_png" alt=""></label>
+            </div>
+        </div>
+    </section>
+    <section class="table__body">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID<span class="icon-arrow">↑</span></th>
+                    <th>Czynnosc<span class="icon-arrow">↑</span></th>
+                    <th>Poprzednik<span class="icon-arrow">↑</span></th>
+                    <th>Nastepnik<span class="icon-arrow">↑</span></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody2">
+                <!-- Wiersze tabeli będą dodawane dynamicznie tutaj -->
+            </tbody>
+        </table>
+    </section>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let idCounter = 1; // Przenosimy licznik ID na zewnątrz funkcji DOMContentLoaded
+
+ // Funkcja obsługująca kliknięcie w komórkę tabeli
+   const handleCellClick = function(event) {
+    const target = event.target;
+    if (target.tagName === 'TD' && target.cellIndex !== 0) {
+        const currentValue = target.textContent.trim();
+        const input = document.createElement('input');
+        input.value = currentValue;
+        input.style.width = target.offsetWidth ;
+        input.style.height = target.offsetHeight ;
+        input.style.boxSizing = 'border-box';
+        input.style.padding = '5px';
+        input.style.margin = '0';
+        input.style.border = '1px solid #ccc';
+        input.style.borderRadius = '3px';
+        input.style.fontSize = 'inherit';
+        input.style.fontFamily = 'inherit';
+        input.style.textAlign = 'center';
+
+        // Po utworzeniu pola input, zastępujemy nim komórkę tabeli
+        target.innerHTML = '';
+        target.appendChild(input);
+
+        // Obsługa zdarzenia zatwierdzenia nowej wartości po wciśnięciu Enter
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // Walidacja danych
+                const tableId = target.parentElement.parentElement.id;
+                const columnIndex = target.cellIndex;
+                const newValue = input.value;
+
+
+                if (!newValue) {
+                    alert('Nowa wartość nie może być pusta');
+                    return;
+                }
+
+                if (tableId === 'tableBody2') {
+                    if (columnIndex === 1) {
+                        const existingValues = Array.from(document.querySelectorAll('#tableBody2 tr td:nth-child(2)')).map(td => td.textContent);
+                        if (existingValues.includes(newValue)) {
+                            alert('Ta wartość już istnieje w kolumnie Czynnosc');
+                            return;
+                        }
+                        if (!/^[A-Z]$/.test(newValue)) {
+                            alert('Kolumna Czynnosc może zawierać tylko i wyłącznie pojedyncze duże litery');
+                            return;
+                        }
+                    }
+
+                    if ((columnIndex === 2 || columnIndex === 3) && (!Number.isInteger(parseFloat(newValue)) || parseFloat(newValue) < 0)) {
+                        alert('Poprzednik i Nastepnik muszą być liczbami całkowitymi dodatnimi');
+                        return;
+                    }
+                    const row = target.parentElement;
+                    const column2Value = row.cells[2].textContent;
+                    const column3Value = row.cells[3].textContent;
+
+                    if (columnIndex === 2 && column3Value !== "-" && parseInt(newValue) >= parseInt(column3Value)) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+                    if (columnIndex === 3 && parseInt(newValue) <= parseInt(column2Value)) {
+                        alert("Błąd - pętla w grafie!");
+                        return;
+                    }
+                }
+
+                target.textContent = newValue;
+            }
+        });
+
+        // Ustawienie fokusa na polu input po jego utworzeniu
+        input.focus();
+    }
+};
+
+
+    fetch('http://localhost:5000/get_events') // Zmieniamy endpoint na /get_events
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.getElementById('tableBody2');
+            for (let key in data) {
+                for (let event of data[key]) {
+                    let row = document.createElement('tr');
+
+                    let cellID = document.createElement('td');
+                    cellID.textContent = idCounter; // Używamy licznika jako ID
+                    row.appendChild(cellID);
+
+                    let cellActivity = document.createElement('td');
+                    cellActivity.textContent = key;
+                    row.appendChild(cellActivity);
+
+                    let cellPrevActivity = document.createElement('td');
+                    cellPrevActivity.textContent = event[0];
+                    row.appendChild(cellPrevActivity);
+
+                    let cellNextActivity = document.createElement('td');
+                    cellNextActivity.textContent = event[1];
+                    row.appendChild(cellNextActivity);
+
+                    tableBody.appendChild(row);
+                }
+                idCounter++;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+    document.getElementById('addRow2').addEventListener('click', function() {
+        let tableBody = document.getElementById('tableBody2');
+        let row = document.createElement('tr');
+
+        let cellID = document.createElement('td');
+        cellID.textContent = idCounter; // Używamy licznika jako ID dla nowego wiersza
+        row.appendChild(cellID);
+
+        for (let i = 0; i < 3; i++) {
+            let cell = document.createElement('td');
+            cell.textContent = '-'; // Wypełniamy puste pola "-"
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+        idCounter++; // Zwiększamy licznik ID po dodaniu nowego wiersza
+
+        // Dodajemy obsługę zdarzeń do nowo utworzonych komórek
+        let newCells = row.querySelectorAll('td');
+        newCells.forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
+    });
+
+    document.getElementById('removeRow2').addEventListener('click', function() {
+        let tableBody = document.getElementById('tableBody2');
+        if (tableBody.rows.length > 0) {
+            tableBody.deleteRow(tableBody.rows.length - 1);
+            idCounter--; // Zmniejszamy licznik ID po usunięciu wiersza
+        }
+    });
+});
+
+</script>
+</body>
+
+</html>

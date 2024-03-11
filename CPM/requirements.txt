@@ -1,0 +1,12 @@
+tabulate
+pandas
+numpy
+matplotlib
+datetime
+networkx
+pygraphviz
+plotly
+flask
+requests
+flask_cors
+scipy

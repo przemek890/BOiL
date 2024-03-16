@@ -1,0 +1,8 @@
+tabulate
+numpy
+matplotlib
+datetime
+flask
+requests
+flask_cors
+scipy

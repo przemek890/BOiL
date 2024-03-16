@@ -11,11 +11,10 @@
 > python3 -m venv venv
 - Aktywuj środowisko wirtualne za pomocą polecenia:
 > source venv/bin/activate
-
 ---
 
 ## Instalacja pakietów zależnych:
-> 
+> pip install -r requirements.txt
 > 
 
 ---

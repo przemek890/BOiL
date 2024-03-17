@@ -38,7 +38,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "Calculate",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -62,6 +62,14 @@
 						"calculate"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_doc",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

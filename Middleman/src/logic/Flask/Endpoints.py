@@ -1,10 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np
-from src.logic.middleman import middleman_issue
+from pymongo import MongoClient
+from src.logic.middleman import middleman_issue # błędnie pokazuje Pycharm, że tego nie widzi ;/
+from bson import json_util
+import json
 """"""""""""""""""""""""""""""""""""""""""
 app = Flask(__name__)
 CORS(app)
+#########
+client = MongoClient("mongodb://root:root@localhost:27017/")
+db = client["middleman"]
+collection = db['CollectData']
 """"""""""""""""""""""""
 @app.route('/')
 def home():
@@ -12,6 +19,11 @@ def home():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
+    """
+    input - dane wprowadzone przez użytkownika w aplikacji
+    output - dane wyliczone na podstawie inputu
+    :return: Informacja o tym że dane wejściowe, jak i te wyliczone zostały zapisane w bazie Mongo
+    """
     data = request.get_json()
 
     supply = np.array(data['supply'])
@@ -32,8 +44,31 @@ def calculate():
         "profit": profit
     }
 
+    document = {
+        "input": data,
+        "output": response
+    }
+
+    # collection.delete_many({})     # Usuń wszystkie dokumenty z kolekcji (by dodany był tym jedynym)
+
+    collection.insert_one(document)
+
+    response["message"] = "Dane wejściowe i wyjściowe zostały zapisane w bazie Mongo."
+
     return jsonify(response)
 
+
+
+@app.route('/get_doc', methods=['GET'])
+def getdata():
+    """
+    :return: Zwraca ostatnio dodany rekord do bazy (starsze rekordy są zapisywane dla celów archiwizacji)
+    """
+    document = collection.find_one(sort=[('_id', -1)])  # Pobierz ostatni dokument z kolekcji
+    if document:
+        return json.loads(json_util.dumps(document))    # Zwróć dokument jako odpowiedź JSON
+    else:
+        return jsonify({"message": "Baza danych jest pusta."})
+
 """"""""""""""""""""""""
-if __name__ == '__main__':
-    app.run(debug=True)
+

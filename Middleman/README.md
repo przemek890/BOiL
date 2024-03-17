@@ -26,6 +26,16 @@
 >
 
 ---
+## Frontend:
+- Instalacja modułów:
+> cd ./src/view
+> 
+> npm install
+
+- Uruchomienie aplikacji:
+> npm start 
+
+---
 
 ## Odpalenie serwera Flask:
 
@@ -34,6 +44,17 @@
 
 ## Windows:
 > python main.py
+
+---
+
+# Jak uruchomić bazę:
+
+> docker build -t middleman_img .
+> docker run -p 27017:27017 middleman_img
+
+# Baza dostępna jest pod (np. poprzez MongoDB Compass):
+
+> mongodb://root:root@localhost:27017/middleman
 
 ---
 

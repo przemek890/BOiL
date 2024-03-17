@@ -47,18 +47,20 @@
 
 ---
 
-# Jak uruchomić bazę:
+## Jak uruchomić bazę:
 
 > docker build -t middleman_img .
+> 
 > docker run -p 27017:27017 middleman_img
 
-# Baza dostępna jest pod (np. poprzez MongoDB Compass):
+## Baza dostępna jest pod (np. poprzez MongoDB Compass):
 
 > mongodb://root:root@localhost:27017/middleman
 
 ---
 
 ## Testy:
+
 > Curl lub Postman
 
 ---

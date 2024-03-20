@@ -2,14 +2,16 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np
 from pymongo import MongoClient
-from src.logic.middleman import middleman_issue # błędnie pokazuje Pycharm, że tego nie widzi ;/
 from bson import json_util
+from middleman import middleman_issue
 import json
+
+
 """"""""""""""""""""""""""""""""""""""""""
 app = Flask(__name__)
 CORS(app)
 #########
-client = MongoClient("mongodb://root:root@localhost:27017/")
+client = MongoClient("mongodb://root:root@db:27017/")
 db = client["middleman"]
 collection = db['CollectData']
 """"""""""""""""""""""""

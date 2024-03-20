@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    build:
+      context: ./Data
+      dockerfile: Dockerfile
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: middleman
+    ports:
+      - "27017:27017"
+  backend:
+    build:
+      context: ./src/logic
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+  frontend:
+    build:
+      context: ./src/view_r
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"

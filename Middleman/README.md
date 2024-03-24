@@ -4,6 +4,8 @@ Jeden, by wszystkimi rządzić, jeden, by wszystkie odnaleźć, Jeden, by wszyst
 
 ---
 
+- Po dokonaniu zmian w Froncie - odśwież stronę!
+
 ## Testy:
 > Curl lub Postman
 

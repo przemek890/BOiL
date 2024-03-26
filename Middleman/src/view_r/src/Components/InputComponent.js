@@ -1,6 +1,6 @@
 import React from 'react';
 import { NumberInput } from '@mantine/core';
-import { createTheme, MantineProvider } from '@mantine/core';
+import {MantineProvider } from '@mantine/core';
 
 const InputComponent = () => {
     return (

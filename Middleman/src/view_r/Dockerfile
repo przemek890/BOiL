@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY view_r_ins .
 
 EXPOSE 3000
 

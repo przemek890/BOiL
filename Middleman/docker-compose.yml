@@ -20,8 +20,8 @@ services:
       - db
   frontend:
     build:
-      context: ./src/view_r
-      dockerfile: Dockerfile
+      context: src/view_r
+      dockerfile: src/Dockerfile
     ports:
       - "3000:3000"
     volumes:

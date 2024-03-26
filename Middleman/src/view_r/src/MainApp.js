@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Button from "@mui/material/Button";
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { AppBar, Stack, Toolbar, Typography } from "@mui/material";
+import { MantineProvider } from '@mantine/core';
 
 import InputComponent from "./Components/InputComponent";
 import OutputComponent from "./Components/OutputComponent";

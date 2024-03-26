@@ -1,4 +1,6 @@
 import React from 'react';
+import { NumberInput } from '@mantine/core';
+import { createTheme, MantineProvider } from '@mantine/core';
 
 const InputComponent = () => {
     return (
@@ -17,5 +19,17 @@ const InputComponent = () => {
         </div>
     )
 }
+
+
+// import { NumberInput } from '@mantine/core';
+//
+// function Demo() {
+//   return (
+//     <NumberInput
+//       label="Customer 1"
+//       placeholder="Podaj liczbę całkowita"
+//     />
+//   );
+// }
 
 export default InputComponent;

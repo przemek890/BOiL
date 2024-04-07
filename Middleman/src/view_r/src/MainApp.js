@@ -7,7 +7,6 @@ import { AppBar, Stack, Toolbar, Typography } from "@mui/material";
 
 import InputComponent from "./Components/InputComponent";
 import OutputComponent from "./Components/OutputComponent";
-import CustSuppComponent from "./Components/CustSuppComponent";
 
 const MainApp = () => {
     const [activeTab, setActiveTab] = useState(0);
@@ -15,9 +14,16 @@ const MainApp = () => {
 
     const theme = createTheme({
         palette: {
+            primary: {
+                main: darkMode ? '#ffffff' : '#000000',
+            },
             mode: darkMode ? 'dark' : 'light',
+            background: {
+                default: darkMode ? '#1f1f23' : '#ffffff',
+            },
         },
     });
+
 
     return (
         <div className="App">
@@ -25,12 +31,11 @@ const MainApp = () => {
                 <CssBaseline />
                 <div>
                     <AppBar>
-                        <Toolbar>
+                        <Toolbar style={{ backgroundColor: '#000000' }}>
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Middleman issue</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button color="inherit" onClick={() => setActiveTab(0)}>Input</Button>
                                 <Button color="inherit" onClick={() => setActiveTab(1)}>Output</Button>
-                                <Button color="inherit" onClick={() => setActiveTab(2)}>Table</Button>
                                 <Button color="inherit" onClick={() => setDarkMode(!darkMode)}>
                                     {darkMode ? <FaSun /> : <FaMoon />}
                                 </Button>
@@ -40,7 +45,6 @@ const MainApp = () => {
                     <div>
                         {activeTab === 0 && <InputComponent/>}
                         {activeTab === 1 && <OutputComponent/>}
-                        {activeTab === 2 && <CustSuppComponent/>}
                     </div>
                 </div>
             </ThemeProvider>

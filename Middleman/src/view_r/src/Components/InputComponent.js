@@ -60,7 +60,9 @@ const InputComponent = () => {
     const addSupplierRow = () => {
         const newRow = { name: `supplier ${rows.filter(row => row.name.startsWith('supplier')).length + 1}`, columns: ['Supply', ...rows[1].columns.slice(1, -1), 'Purchase price'] };
         setRows([...rows.slice(0, -1), newRow, rows[rows.length - 1]]);
+        setData(prevData => [...prevData.slice(0, -1), Array(newRow.columns.length).fill(''), prevData[prevData.length - 1]]);
     };
+
 
     const removeSupplierRow = () => {
         if (rows.filter(row => row.name.startsWith('supplier')).length > 1) {
@@ -84,8 +86,8 @@ const handleCalculate = async () => {
     };
 
     const isDataIncorrectOrIncomplete = Object.values(requestData).flat(2).some(value => {
-        const regex = /^(?:[1-9]\d*|0)?(?:\.\d+)?$/;
-        return !regex.test(value);
+        const regex = /^(?:[1-9]\d*(\.\d+)?)|(?:0?\.\d*[1-9]\d*)$/;
+    return !regex.test(value);
     });
 
     if (isDataIncorrectOrIncomplete) {
@@ -97,6 +99,7 @@ const handleCalculate = async () => {
         console.log(requestData)
         const response = await axios.post('http://localhost:5000/calculate', requestData);
         console.log(response.data);
+        alert('Data was processed correctly');
     } catch (error) {
         console.error(error);
     }

@@ -70,7 +70,7 @@ def getdata():
     if document:
         return json.loads(json_util.dumps(document))    # Zwróć dokument jako odpowiedź JSON
     else:
-        return jsonify({"message": "Database is empty."})
+        return jsonify({"message": "Baza danych jest pusta."})
 
 """"""""""""""""""""""""
 

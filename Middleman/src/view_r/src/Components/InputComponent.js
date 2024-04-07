@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import axios from 'axios';
+import { styled } from '@mui/system';
+
+const redAsteriskStyle = {
+  '& .MuiFormLabel-asterisk': {
+    color: 'red',
+  },
+};
+
+
+const StyledTableCell = styled(TableCell)(redAsteriskStyle);
 
 const InputComponent = () => {
     const [rows, setRows] = useState([
@@ -15,7 +25,6 @@ const InputComponent = () => {
     useEffect(() => {
         setData(rows.map(row => Array(row.columns.length).fill('')));
     }, [rows]);
-
 
     const handleInputChange = (rowIndex, colIndex, event) => {
         const newData = [...data];
@@ -74,7 +83,17 @@ const handleCalculate = async () => {
         transport_costs
     };
 
- try {
+    const isDataIncorrectOrIncomplete = Object.values(requestData).flat(2).some(value => {
+        const regex = /^(?:[1-9]\d*|0)?(?:\.\d+)?$/;
+        return !regex.test(value);
+    });
+
+    if (isDataIncorrectOrIncomplete) {
+        alert('Incorrect or incomplete data');
+        return;
+    }
+
+    try {
         console.log(requestData)
         const response = await axios.post('http://localhost:5000/calculate', requestData);
         console.log(response.data);
@@ -83,8 +102,12 @@ const handleCalculate = async () => {
     }
 };
 
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <br/>
+            <br/>
+            <br/>
             <h1>Input Component</h1>
             <TableContainer>
                 <Table>
@@ -93,21 +116,23 @@ const handleCalculate = async () => {
                             <TableRow key={rowIndex}>
                                 <TableCell>{row.name}</TableCell>
                                 {row.columns.map((column, columnIndex) => (
-                                    <TableCell key={columnIndex}>
-                                        {column && <TextField label={column} required onChange={(event) => handleInputChange(rowIndex, columnIndex, event)} />}
-                                    </TableCell>
+                                <StyledTableCell key={columnIndex}>
+                                    {column && <TextField label={column} required value={data[rowIndex][columnIndex] || ''} onChange={(event) => handleInputChange(rowIndex, columnIndex, event)} />}
+                                </StyledTableCell>
                                 ))}
                             </TableRow>
                         ))}
                     </TableHead>
                 </Table>
             </TableContainer>
+            <br/>
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginTop: '1rem' }}>
-                <Button variant="contained" onClick={addCustomerColumn} style={{ marginRight: '1rem' }}>Add column "Customer"</Button>
-                <Button variant="contained" onClick={removeCustomerColumn} style={{ marginRight: '1rem' }}>Remove column "Customer"</Button>
-                <Button variant="contained" onClick={addSupplierRow} style={{ marginRight: '1rem' }}>Add row "Supplier"</Button>
-                <Button variant="contained" onClick={removeSupplierRow} style={{ marginRight: '1rem' }}>Remove row "Supplier"</Button>
-                <Button variant="contained" onClick={handleCalculate}>Calculate</Button>
+                <Button variant="contained" onClick={addCustomerColumn} style={{ marginRight: '1rem', fontSize: '0.7rem' }} size="small">Add column "Customer"</Button>
+                <Button variant="contained" onClick={removeCustomerColumn} style={{ marginRight: '1rem', fontSize: '0.7rem' }} size="small">Remove column "Customer"</Button>
+                <Button variant="contained" onClick={addSupplierRow} style={{ marginRight: '1rem', fontSize: '0.7rem' }} size="small">Add row "Supplier"</Button>
+                <Button variant="contained" onClick={removeSupplierRow} style={{ marginRight: '1rem', fontSize: '0.7rem' }} size="small">Remove row "Supplier"</Button>
+                <Button variant="contained" onClick={handleCalculate} style={{ fontSize: '0.7rem', width: '200px' }} size="small">Calculate</Button>
+
             </div>
         </div>
     );

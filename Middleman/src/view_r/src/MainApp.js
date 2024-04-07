@@ -15,7 +15,7 @@ const MainApp = () => {
     const theme = createTheme({
         palette: {
             primary: {
-                main: darkMode ? '#ffffff' : '#000000',
+                main: darkMode ? '#ffffff' : '#1c1c1c',
             },
             mode: darkMode ? 'dark' : 'light',
             background: {

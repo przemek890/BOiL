@@ -10,6 +10,7 @@ def middleman_issue(supply: np.ndarray,
                     transport_costs: np.ndarray) -> \
         Tuple[np.ndarray, np.ndarray, float, float, float, float, float, OptimizeResult]:
 
+
     unit_income = sale_prices - np.expand_dims(purchase_costs, axis=1) - transport_costs
 
     c = unit_income.flatten()                                                                   # Spłaszczamy macierz dochodu jednostkowego do tablicy 1D

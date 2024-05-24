@@ -5,13 +5,17 @@ from pymongo import MongoClient
 from bson import json_util
 from middleman import middleman_issue
 import json
+import os
 
 
 """"""""""""""""""""""""""""""""""""""""""
 app = Flask(__name__)
 CORS(app)
 #########
-client = MongoClient("mongodb://root:root@db:27017/")
+db_host = os.getenv('DB_HOST')
+if db_host is None:
+    raise Exception('DB_HOST is not set')
+client = MongoClient(f"mongodb://root:root@{db_host}:27017/")
 db = client["middleman"]
 collection = db['CollectData']
 """"""""""""""""""""""""

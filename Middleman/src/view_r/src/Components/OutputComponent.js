@@ -6,10 +6,12 @@ const OutputComponent = () => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:5000/get_doc')
+        const serverIp = process.env.REACT_APP_SERVER_IP;
+        fetch(`http://${serverIp}:5000/get_doc`)
             .then(response => response.json())
             .then(data => setData(data));
     }, []);
+
 
     if (data && data.message === "Database is empty.") {
         return (

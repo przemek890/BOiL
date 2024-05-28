@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     environment:
-      - SERVER_IP=localhost
+      - SERVER_IP=192.168.100.83
       - DB_HOST=db
     networks:
       - awsvpc
@@ -25,11 +25,11 @@ services:
     image: przemek899/middleman-frontend
     ports:
       - "3000:3000"
-    volumes:
-      - ./src/view_r:/app
-      - /app/node_modules
+#    volumes:
+#      - ./src/view_r:/app
+#      - /app/node_modules
     environment:
-      - REACT_APP_SERVER_IP=localhost
+      - REACT_APP_SERVER_IP=192.168.100.83
     networks:
       - awsvpc
 networks:

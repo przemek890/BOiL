@@ -11,11 +11,13 @@ import os
 """"""""""""""""""""""""""""""""""""""""""
 app = Flask(__name__)
 CORS(app)
-#########
+
 db_host = os.getenv('DB_HOST')
 if db_host is None:
     raise Exception('DB_HOST is not set')
-client = MongoClient(f"mongodb://root:root@{db_host}:27017/")
+
+client = MongoClient("mongodb+srv://przemek899:rhoVk64Fk97eviXy@middleman-db.o4akuiy.mongodb.net/")
+
 db = client["middleman"]
 collection = db['CollectData']
 """"""""""""""""""""""""

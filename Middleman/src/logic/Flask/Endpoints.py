@@ -7,16 +7,12 @@ from middleman import middleman_issue
 import json
 import os
 
-
 """"""""""""""""""""""""""""""""""""""""""
 app = Flask(__name__)
 CORS(app)
 
-db_host = os.getenv('DB_HOST')
-if db_host is None:
-    raise Exception('DB_HOST is not set')
-
-client = MongoClient("mongodb+srv://przemek899:rhoVk64Fk97eviXy@middleman-db.o4akuiy.mongodb.net/")
+mongo_uri = os.getenv("MONGO_URI")
+client = MongoClient(mongo_uri)
 
 db = client["middleman"]
 collection = db['CollectData']

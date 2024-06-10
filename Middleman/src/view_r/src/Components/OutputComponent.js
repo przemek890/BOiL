@@ -9,7 +9,7 @@ const OutputComponent = () => {
         const fetchData = async () => {
             try {
                 const serverIp = process.env.REACT_APP_SERVER_IP;
-                const response = await fetch(`http://${serverIp}:5001/get_doc`);
+                const response = await fetch(`http://${serverIp}:5000/get_doc`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

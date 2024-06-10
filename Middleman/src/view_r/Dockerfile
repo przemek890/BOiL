@@ -1,4 +1,4 @@
-FROM node:14 AS build
+FROM node:14
 
 WORKDIR /app
 
@@ -8,19 +8,14 @@ RUN npm install
 
 COPY . .
 
-ARG REACT_APP_SERVER_IP
-ENV REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP
-
-RUN echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" > .env
-
 RUN npm run build
 
-FROM nginx:alpine
+RUN npm install -g serve
 
-RUN rm -rf /usr/share/nginx/html/*
+COPY runtime-env.sh ./
 
-COPY --from=build /app/build /usr/share/nginx/html
+RUN chmod +x runtime-env.sh
 
-EXPOSE 80
+EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["sh", "-c", "./runtime-env.sh && serve -s build"]

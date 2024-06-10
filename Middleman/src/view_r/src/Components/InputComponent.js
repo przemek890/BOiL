@@ -26,6 +26,7 @@ const InputComponent = () => {
         setData(rows.map(row => Array(row.columns.length).fill('')));
     }, [rows]);
 
+
     const handleInputChange = (rowIndex, colIndex, event) => {
         const newData = [...data];
         newData[rowIndex][colIndex] = event.target.value;
@@ -70,42 +71,45 @@ const InputComponent = () => {
         }
     };
 
-const handleCalculate = async () => {
-    const supply = rows.filter(row => row.name.startsWith('supplier')).map((row, rowIndex) => Number(data[rowIndex + 1][0]?.trim()));
-    const demand = rows.find(row => row.name === 'demand').columns.slice(1).map((value, colIndex) => Number(data[0][colIndex + 1]?.trim()));
-    const purchase_costs = rows.filter(row => row.name.startsWith('supplier')).map((row, rowIndex) => Number(data[rowIndex + 1][row.columns.length - 1]?.trim()));
-    const sale_prices = rows.find(row => row.name === 'selling price').columns.slice(1).map((value, colIndex) => Number(data[data.length - 1][colIndex + 1]?.trim()));
-    const transport_costs = rows.filter(row => row.name.startsWith('supplier')).map((row, rowIndex) => row.columns.slice(1, row.columns.length - 1).map((value, colIndex) => Number(data[rowIndex + 1][colIndex + 1]?.trim())));
+    const handleCalculate = async () => {
+        const supply = rows.filter(row => row.name.startsWith('supplier')).map((row, rowIndex) => Number(data[rowIndex + 1][0]?.trim()));
+        const demand = rows.find(row => row.name === 'demand').columns.slice(1).map((value, colIndex) => Number(data[0][colIndex + 1]?.trim()));
+        const purchase_costs = rows.filter(row => row.name.startsWith('supplier')).map((row, rowIndex) => Number(data[rowIndex + 1][row.columns.length - 1]?.trim()));
+        const sale_prices = rows.find(row => row.name === 'selling price').columns.slice(1).map((value, colIndex) => Number(data[data.length - 1][colIndex + 1]?.trim()));
+        const transport_costs = rows.filter(row => row.name.startsWith('supplier')).map((row, rowIndex) => row.columns.slice(1, row.columns.length - 1).map((value, colIndex) => Number(data[rowIndex + 1][colIndex + 1]?.trim())));
 
-    const requestData = {
-        supply,
-        demand,
-        purchase_costs,
-        sale_prices,
-        transport_costs
+        const requestData = {
+            supply,
+            demand,
+            purchase_costs,
+            sale_prices,
+            transport_costs
+        };
+
+        const isDataIncorrectOrIncomplete = Object.values(requestData).flat(2).some(value => {
+            const regex = /^(?:[1-9]\d*(\.\d+)?)|(?:0?\.\d*[1-9]\d*)$/;
+            return !regex.test(value);
+        });
+
+        if (isDataIncorrectOrIncomplete) {
+            alert('Incorrect or incomplete data');
+            return;
+        }
+
+        try {
+            const serverIp = window.REACT_APP_SERVER_IP;
+            if (!serverIp) {
+                throw new Error('Server IP is not defined');
+            }
+            console.log(requestData);
+            const response = await axios.post(`http://${serverIp}:5001/calculate`, requestData);
+            console.log(response.data);
+            alert('Data was processed correctly');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing the data');
+        }
     };
-
-    const isDataIncorrectOrIncomplete = Object.values(requestData).flat(2).some(value => {
-        const regex = /^(?:[1-9]\d*(\.\d+)?)|(?:0?\.\d*[1-9]\d*)$/;
-    return !regex.test(value);
-    });
-
-    if (isDataIncorrectOrIncomplete) {
-        alert('Incorrect or incomplete data');
-        return;
-    }
-
-    try {
-        const serverIp = process.env.REACT_APP_SERVER_IP;
-        console.log(requestData);
-        const response = await axios.post(`http://${serverIp}:5000/calculate`, requestData);
-        console.log(response.data);
-        alert('Data was processed correctly');
-    } catch (error) {
-        console.error(error);
-    }
-
-};
 
 
     return (

@@ -4,12 +4,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const OutputComponent = () => {
     const [data, setData] = useState(null);
+    const [serverIp, setServerIp] = useState('');
 
     useEffect(() => {
+        setServerIp(window.REACT_APP_SERVER_IP || '');
+
         const fetchData = async () => {
             try {
-                const serverIp = process.env.REACT_APP_SERVER_IP;
-                const response = await fetch(`http://${serverIp}:5000/get_doc`);
+                const response = await fetch(`http://${window.REACT_APP_SERVER_IP}:5001/get_doc`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -20,7 +22,11 @@ const OutputComponent = () => {
             }
         };
 
-        fetchData();
+        if (window.REACT_APP_SERVER_IP) {
+            fetchData();
+        } else {
+            console.error('Server IP is not defined');
+        }
     }, []);
 
 

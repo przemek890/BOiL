@@ -6,23 +6,34 @@ const OutputComponent = () => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        const serverIp = process.env.REACT_APP_SERVER_IP;
-        fetch(`http://${serverIp}:5000/get_doc`)
-            .then(response => response.json())
-            .then(data => setData(data));
+        const fetchData = async () => {
+            try {
+                const serverIp = process.env.REACT_APP_SERVER_IP;
+                const response = await fetch(`http://${serverIp}:5001/get_doc`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await response.json();
+                setData(result);
+            } catch (error) {
+                console.error('Fetch error: ', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
 
     if (data && data.message === "Database is empty.") {
         return (
-        <div>
-            <br/>
-            <br/>
-            <br/>
-            <Typography variant="h4" align="center"><b>Output Component</b></Typography>
-            <br/>
-            <Typography variant="h6" align="center">Database is empty</Typography>;
-        </div>
+            <div>
+                <br/>
+                <br/>
+                <br/>
+                <Typography variant="h4" align="center"><b>Output Component</b></Typography>
+                <br/>
+                <Typography variant="h6" align="center">Database is empty</Typography>;
+            </div>
         );
     }
 
@@ -117,8 +128,8 @@ const OutputComponent = () => {
                                 <Typography variant="h6">{data.output.total_transport_cost}</Typography>
                             </AccordionDetails>
                         </Accordion>
-                         <Box height={8} />
-                            <p style={{ textAlign: "left", fontSize: "9px" }}>"Information available for the latest data from the database"</p>
+                        <Box height={8} />
+                        <p style={{ textAlign: "left", fontSize: "9px" }}>"Information available for the latest data from the database"</p>
                         <Box height={8} />
                     </Grid>
                 </Grid>

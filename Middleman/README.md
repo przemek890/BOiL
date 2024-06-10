@@ -2,11 +2,9 @@ Jeden, by wszystkimi rządzić, jeden, by wszystkie odnaleźć, Jeden, by wszyst
 
 ### `docker-compose up --build`
 
-### `docker-compose -f AWS-dc.yaml up --build`
-
 ---
 
-- Po dokonaniu zmian w Froncie - odśwież stronę!
+- Po dokonaniu zmian w froncie - odśwież stronę!
 
 ## Testy:
 > Curl lub Postman

@@ -97,13 +97,14 @@ const handleCalculate = async () => {
 
     try {
         const serverIp = process.env.REACT_APP_SERVER_IP;
-        console.log(requestData)
-        const response = await axios.post(`http://${serverIp}:5000/calculate`, requestData);
+        console.log(requestData);
+        const response = await axios.post(`http://${serverIp}:5001/calculate`, requestData);
         console.log(response.data);
         alert('Data was processed correctly');
     } catch (error) {
         console.error(error);
     }
+
 };
 
 

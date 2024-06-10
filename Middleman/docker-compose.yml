@@ -1,9 +1,7 @@
-version: '3'
+version: '3.8'
 services:
   db:
-    build:
-      context: ./Data
-      dockerfile: Dockerfile
+    image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
@@ -12,32 +10,34 @@ services:
       - "27017:27017"
     networks:
       - awsvpc
+
   backend:
     build:
       context: ./src/logic
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5001:5000"
     depends_on:
       - db
     environment:
       - SERVER_IP=localhost
-      - DB_HOST=db
+      - MONGO_URI=mongodb://root:root@db:27017/middleman?authSource=admin
     networks:
       - awsvpc
+
   frontend:
     build:
       context: ./src/view_r
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./src/view_r:/app
-      - /app/node_modules
+      args:
+        - REACT_APP_SERVER_IP=localhost
     environment:
       - REACT_APP_SERVER_IP=localhost
+    ports:
+      - "3000:80"
     networks:
       - awsvpc
+
 networks:
   awsvpc:
     driver: bridge

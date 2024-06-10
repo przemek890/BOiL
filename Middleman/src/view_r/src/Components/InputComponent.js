@@ -102,7 +102,7 @@ const InputComponent = () => {
                 throw new Error('Server IP is not defined');
             }
             console.log(requestData);
-            const response = await axios.post(`http://${serverIp}:5001/calculate`, requestData);
+            const response = await axios.post(`http://${serverIp}:5000/calculate`, requestData);
             console.log(response.data);
             alert('Data was processed correctly');
         } catch (error) {

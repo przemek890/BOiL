@@ -11,7 +11,7 @@ const OutputComponent = () => {
 
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://${window.REACT_APP_SERVER_IP}:5001/get_doc`);
+                const response = await fetch(`http://${window.REACT_APP_SERVER_IP}:5000/get_doc`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
